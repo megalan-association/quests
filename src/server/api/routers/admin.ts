@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -48,4 +47,19 @@ export const AdminRouter = createTRPCRouter({
         },
       });
     }),
+
+  getAdminSocietyList: adminProcedure.query(async ({ ctx }) => {
+    return ctx.db.user.findFirst({
+      where: { id: ctx.session.user.id },
+      select: {
+        societies: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
+  }),
 });
