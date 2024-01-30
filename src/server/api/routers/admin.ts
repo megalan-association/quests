@@ -33,4 +33,19 @@ export const AdminRouter = createTRPCRouter({
         },
       });
     }),
+
+  getSocietyName: protectedProcedure
+    .input(z.object({ token: z.string().min(0) }))
+    .query(async ({ ctx, input }) => {
+      return ctx.db.society.findFirst({
+        where: {
+          joinToken: input.token,
+        },
+        select: {
+          name: true,
+          id: true,
+          image: true,
+        },
+      });
+    }),
 });

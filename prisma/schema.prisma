@@ -78,6 +78,8 @@ model Society {
     tasks     Task[] // 1 society can have 0 to many tasks
     Room      Room    @relation(fields: [roomId], references: [id])
     roomId    Int // 1 society can only be in 1 room
+
+    @@index(joinToken) // as this will be searched
 }
 
 model Task {
