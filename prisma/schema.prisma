@@ -73,7 +73,7 @@ model Society {
     id        Int     @id @default(autoincrement())
     name      String
     image     String?
-    joinToken String
+    joinToken String  @unique
     users     User[] // 1 society can have 0 to many admins
     tasks     Task[] // 1 society can have 0 to many tasks
     Room      Room    @relation(fields: [roomId], references: [id])
