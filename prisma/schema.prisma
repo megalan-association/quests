@@ -85,6 +85,7 @@ model Task {
     name        String
     description String
     points      Int       @default(100)
+    activated   Boolean   @default(false)
     soceities   Society[] // 1 task can be hosted by 0 to many soceities
     userId      Int // 1 task can be created by 1 user
     User        User      @relation(fields: [userId], references: [id])
