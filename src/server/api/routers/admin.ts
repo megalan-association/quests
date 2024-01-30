@@ -20,4 +20,17 @@ export const AdminRouter = createTRPCRouter({
         },
       });
     }),
+
+  leaveSociety: adminProcedure
+    .input(z.object({ id: z.number().min(0) }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          societies: { disconnect: { id: input.id } },
+        },
+      });
+    }),
 });
