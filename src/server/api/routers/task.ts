@@ -78,4 +78,15 @@ export const TaskRouter = createTRPCRouter({
       });
       return true;
     }),
+
+  complete: adminProcedure
+    .input(z.object({ userId: z.number().min(0), taskId: z.number().min(0) }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: { id: input.userId },
+        data: {
+          completedTasks: { connect: { id: input.taskId } },
+        },
+      });
+    }),
 });
