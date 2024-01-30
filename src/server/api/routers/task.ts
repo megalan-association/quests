@@ -50,4 +50,32 @@ export const TaskRouter = createTRPCRouter({
         },
       });
     }),
+
+  activate: adminProcedure
+    .input(z.object({ id: z.number().min(0) }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.task.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          activated: true,
+        },
+      });
+      return true;
+    }),
+
+  deactivate: adminProcedure
+    .input(z.object({ id: z.number().min(0) }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.task.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          activated: false,
+        },
+      });
+      return true;
+    }),
 });
