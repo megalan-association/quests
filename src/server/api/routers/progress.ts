@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
-  adminProcedure,
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
@@ -61,7 +60,7 @@ export const ProgressRouter = createTRPCRouter({
   roomStatus: protectedProcedure
     .input(z.object({ roomId: z.number().min(1) }))
     .query(async ({ ctx, input }) => {
-      const room = await ctx.db.room.findFirst({
+      const room = await ctx.db.room.findFirstOrThrow({
         where: {
           id: input.roomId,
         },
@@ -75,12 +74,6 @@ export const ProgressRouter = createTRPCRouter({
           },
         },
       });
-
-      if (!room) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-        });
-      }
 
       const completedPoints = await ctx.db.task.aggregate({
         where: {
