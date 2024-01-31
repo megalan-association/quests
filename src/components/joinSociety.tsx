@@ -1,14 +1,15 @@
 import { api } from "~/utils/api";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, RadioGroup, Radio, input, Progress, Input} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, RadioGroup, Radio, input, Progress, Input, Image, Avatar } from "@nextui-org/react";
+import DefaultIcon from "../../public/default.png"
 
 export default function JoinSociety() {
   const total = 2;
   const color = "primary";
   const variant = "flat";
   const headerStep1 = "You can find your society token by checking the MegaLan Discord"
-  const headerStep2 = "We've found your society!"
+  const headerStep2 = "Are you sure you want to join this society?"
 
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
@@ -16,10 +17,8 @@ export default function JoinSociety() {
   const [societyToken, setSocietyToken] = useState('');
   const [error, setError] = useState(false);
   const societyInfo = useRef<{ name: string; id: number; image: string | null; }>();
-
-  const submit = useRef(false);
-
-  const societyArgs = api.admin.getSocietyName.useQuery({token: societyToken}, {enabled: submit.current, retry: false});
+  const [isSubmit, setIsSubmit] = useState(false);
+  const societyArgs = api.admin.getSocietyName.useQuery({token: societyToken}, {enabled: isSubmit, retry: false});
   if (societyArgs.isSuccess) {
     societyInfo.current = societyArgs.data;
   } else {
@@ -39,7 +38,7 @@ export default function JoinSociety() {
 
   const handleClose = () => {
     societyInfo.current = undefined;
-    setCurrentStep(1);
+    setCurrentStep(0);
     setSocietyToken('');
     setError(false)
   }
@@ -53,82 +52,86 @@ export default function JoinSociety() {
         onOpenChange={onOpenChange} 
         onClose={() => handleClose()}
       >
-        <ModalContent className='h-[50vh]'>
+        <ModalContent className='h-fit'>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col items-center">
                 <span className="font-bold text-3xl">Join a society</span>                   {/** CHANGE */}
               </ModalHeader>  
               <ModalBody>
-                <p className="text-lg h-16">{currentStep == 1 ? headerStep1 : headerStep2}</p>
-                <Progress aria-label="Form progress" value={(currentStep / total) * 100} className="max-w-sm my-4"/>
+                <p>{currentStep == 0 ? headerStep1 : headerStep2}</p>
+                <Progress aria-label="Form progress" value={(currentStep / (total - 1)) * 100} className="max-w-sm py-2"/>
                 <div>
-                  {currentStep === 1 &&
+                  {currentStep === 0 &&
                     <Input 
                       size="lg"
                       type="string"
+                      variant="bordered"
+                      classNames={{inputWrapper: "group-data-[focus=true]:border-primary/50"}}
                       value={societyToken}
                       label="Enter Society Token"
-                      isInvalid={error}
-                      errorMessage={error && "Society token is invalid"}
                       placeholder=""
+                      isInvalid={societyArgs.isError}
+                      errorMessage={societyArgs.isError && societyArgs.error.message}
                       isRequired
                       isClearable={true}
                       onClear={() => setSocietyToken("")}
                       onValueChange={(value) => {setSocietyToken(value); setError(false);}}
                     />
                   }
-                  {currentStep === total &&
-                    <div>
-                      {societyInfo.current &&
-                        <span>{societyInfo.current?.name}</span>
-                      }
+                  {currentStep === total - 1 && societyInfo.current &&
+                    <div className="flex flex-row items-center justify-center space-x-4">
+                        <Avatar 
+                          size="lg"
+                          className="drop-shadow-lg"
+                          src={societyInfo.current.image ? societyInfo.current.image : DefaultIcon.src}
+                          alt={`${societyInfo.current.name} icon`}
+                        />
+                        <p>{societyInfo.current.name} lorem ipsum</p>
                     </div>
                   }
                 </div>
               </ModalBody>
               <ModalFooter>
-                {currentStep === 1 &&
+                {currentStep === 0 &&
                   <div className="flex flex-row gap-2 w-full justify-end">
                     <Button
                       variant={variant}
                       color={color}
                       onPress={() => {
-                        submit.current = true;
+                        setIsSubmit(true)
                         setTimeout(() => {
-                          submit.current = false
+                          setIsSubmit(false);
                         }, 50);
                         setTimeout(() => {
                           if (societyArgs.isSuccess) {
-                            setCurrentStep((prev) => (prev < total ? prev + 1 : prev));
-                            setError(false);
-                          } else {
-                            setError(true);
+                            setCurrentStep((prev) => (prev < (total - 1) ? prev + 1 : prev));
                           }
-                        }, 300);
+                        }, 50);
                       }}
                     >
-                      NEXT
+                      Next
                     </Button>
                   </div>
                 }
-                {currentStep === total &&
+                {currentStep === total - 1 &&
                   <div className="flex flex-row gap-2 w-full justify-between">
                     <Button
-                      variant={variant}
-                      color="default"
-                      onPress={() => setCurrentStep((prev) => (prev > 1 ? prev - 1 : prev))}
+                      variant="light"
+                      color="danger"
+                      onPress={() => handleClose()}
                     >
-                      RUN IT BACK
+                      Cancel
                     </Button>
                     <Button
                       color="primary"
                       onPress={() =>{
-                        handleSubmit()
+                        handleSubmit();
+                        onClose();
                       }}
                       isDisabled={societyArgs.isError && !societyInfo}
                     >
-                      SUBMIT
+                      Submit
                     </Button>
                   </div>
                 }
