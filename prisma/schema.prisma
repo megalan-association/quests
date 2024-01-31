@@ -83,14 +83,13 @@ model Society {
 }
 
 model Task {
-    id          Int       @id @default(autoincrement())
-    name        String
-    description String
-    points      Int       @default(100)
-    activated   Boolean   @default(false)
-    societies   Society[] // 1 task can be hosted by 0 to many soceities
-    userId      Int // 1 task can be created by 1 user
-    User        User      @relation(fields: [userId], references: [id])
+    id             Int       @id @default(autoincrement())
+    name           String
+    description    String
+    points         Int       @default(100)
+    activated      Boolean   @default(false)
+    societies      Society[] // 1 task can be hosted by 0 to many soceities
+    completedUsers User[] // 1 task can be completed by 0 to many users
 }
 
 enum UserType {
