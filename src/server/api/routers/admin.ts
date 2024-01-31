@@ -36,7 +36,7 @@ export const AdminRouter = createTRPCRouter({
   getSocietyName: protectedProcedure
     .input(z.object({ token: z.string().min(0) }))
     .query(async ({ ctx, input }) => {
-      return ctx.db.society.findFirst({
+      return ctx.db.society.findFirstOrThrow({
         where: {
           joinToken: input.token,
         },

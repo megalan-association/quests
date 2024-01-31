@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import ModalTemplate from "~/components/modalTemplate";
+import JoinSociety from "~/components/joinSociety";
 
 // import { api } from "~/utils/api";
 
@@ -16,7 +16,7 @@ export default function Dummy() {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center font-mono">
         <>Testing</>
-        <ModalTemplate />
+        <JoinSociety />
       </main>
     </>
   );
