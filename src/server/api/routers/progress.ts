@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -16,6 +17,7 @@ export const ProgressRouter = createTRPCRouter({
             id: ctx.session.user.id,
           },
         },
+        activated: true,
       },
       _sum: {
         points: true,
@@ -23,6 +25,9 @@ export const ProgressRouter = createTRPCRouter({
     });
 
     const totalTasksPoints = await ctx.db.task.aggregate({
+      where: {
+        activated: true,
+      },
       _sum: {
         points: true,
       },
@@ -35,10 +40,15 @@ export const ProgressRouter = createTRPCRouter({
             id: ctx.session.user.id,
           },
         },
+        activated: true,
       },
     });
 
-    const totalTasks = await ctx.db.task.count();
+    const totalTasks = await ctx.db.task.count({
+      where: {
+        activated: true,
+      },
+    });
 
     return {
       completedPoints: completedPoints._sum.points,
@@ -51,6 +61,100 @@ export const ProgressRouter = createTRPCRouter({
   roomStatus: protectedProcedure
     .input(z.object({ roomId: z.number().min(1) }))
     .query(async ({ ctx, input }) => {
-      return;
+      const room = await ctx.db.room.findFirst({
+        where: {
+          id: input.roomId,
+        },
+        select: {
+          societies: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
+        },
+      });
+
+      if (!room) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+        });
+      }
+
+      const completedPoints = await ctx.db.task.aggregate({
+        where: {
+          completedUsers: {
+            some: {
+              id: ctx.session.user.id,
+            },
+          },
+          societies: {
+            some: {
+              id: {
+                in: room.societies.map((s) => s.id),
+              },
+            },
+          },
+          activated: true,
+        },
+        _sum: {
+          points: true,
+        },
+      });
+
+      const totalTasksPoints = await ctx.db.task.aggregate({
+        where: {
+          societies: {
+            some: {
+              id: {
+                in: room.societies.map((s) => s.id),
+              },
+            },
+          },
+          activated: true,
+        },
+        _sum: {
+          points: true,
+        },
+      });
+
+      const completedTasks = await ctx.db.task.count({
+        where: {
+          completedUsers: {
+            some: {
+              id: ctx.session.user.id,
+            },
+          },
+          societies: {
+            some: {
+              id: {
+                in: room.societies.map((s) => s.id),
+              },
+            },
+          },
+          activated: true,
+        },
+      });
+
+      const totalTasks = await ctx.db.task.count({
+        where: {
+          societies: {
+            some: {
+              id: {
+                in: room.societies.map((s) => s.id),
+              },
+            },
+          },
+          activated: true,
+        },
+      });
+
+      return {
+        completedPoints: completedPoints._sum.points,
+        totalTasksPoints: totalTasksPoints._sum.points,
+        completedTasks,
+        totalTasks,
+      };
     }),
 });
