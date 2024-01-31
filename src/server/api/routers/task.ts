@@ -20,7 +20,7 @@ export const TaskRouter = createTRPCRouter({
           description: input.description,
           activated: input.activated,
           points: input.points,
-          User: { connect: { id: ctx.session.user.id } },
+          completedUsers: { connect: { id: ctx.session.user.id } },
           societies: { connect: [{ id: 0 }, { id: 1 }, { id: 2 }] },
         },
       });
