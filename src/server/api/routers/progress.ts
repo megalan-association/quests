@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -150,4 +149,31 @@ export const ProgressRouter = createTRPCRouter({
         totalTasks,
       };
     }),
+
+  leaderboard: publicProcedure.query(async ({ ctx }) => {
+    const leaderboard = await ctx.db.$queryRaw<
+      {
+        id: number;
+        name: string | null;
+        image: string | null;
+        points: number;
+      }[]
+    >`
+    select
+        u.id,
+        u.name,
+        u.image,
+        sum(t.points) as points
+    from
+        "User" u
+        join "_TaskToUser" ttu on ttu."B" = u.id
+        join "Task" t on ttu."A" = t.id
+    group by
+        u.id, points
+    order by
+        points desc;
+    `;
+
+    return leaderboard;
+  }),
 });
