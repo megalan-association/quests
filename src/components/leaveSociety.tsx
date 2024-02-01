@@ -52,8 +52,6 @@ export default function LeaveSociety() {
         id: chosenSociety.id,
       });
       if (leaveSocietyMutation.isSuccess) {
-        // Force refetch of society list due to a successful leave request
-        setSocietyList(undefined);
         handleCancel();
       } else {
         console.log("Uh oh...: Left a society that the user was not a part of");
@@ -76,9 +74,13 @@ export default function LeaveSociety() {
     setChosenSociety(undefined);
   };
 
+  const handleOpen = () => {
+    setSocietyList(undefined);
+  }
+
   return (
     <div className="flex flex-col gap-2">
-      <Button onPress={onOpen} className="max-w-fit" color="primary">
+      <Button onPress={handleOpen} className="max-w-fit" color="primary">
         Leave a society
       </Button>
       <Modal
