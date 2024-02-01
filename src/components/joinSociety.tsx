@@ -27,7 +27,7 @@ export default function JoinSociety() {
 
   const [currentStep, setCurrentStep] = useState(0);
   const [societyToken, setSocietyToken] = useState("");
-  const [societyInfo, setSocietyInfo] = useState<{
+  const [chosenSociety, setChosenSociety] = useState<{
     name: string;
     id: number;
     image: string | null;
@@ -42,16 +42,16 @@ export default function JoinSociety() {
   if (societyArgs.isFetched && isSubmit) {
     setIsSubmit(false);
     if (societyArgs.isSuccess) {
-      setSocietyInfo(societyArgs.data);
+      setChosenSociety(societyArgs.data);
       setCurrentStep((prev) => (prev < total - 1 ? prev + 1 : prev));
     }
   }
 
   const joinSocietyMutation = api.admin.joinSociety.useMutation();
   const handleSubmit = () => {
-    if (societyInfo != undefined) {
+    if (chosenSociety != undefined) {
       joinSocietyMutation.mutate({
-        id: societyInfo.id,
+        id: chosenSociety.id,
       });
     }
 
@@ -60,7 +60,7 @@ export default function JoinSociety() {
 
   const handleCancel = () => {
     console.log("Handling Cancel");
-    setSocietyInfo(undefined);
+    setChosenSociety(undefined);
     setCurrentStep(0);
     setSocietyToken("");
   };
@@ -112,19 +112,19 @@ export default function JoinSociety() {
                       }
                     />
                   )}
-                  {currentStep === total - 1 && societyInfo && (
+                  {currentStep === total - 1 && chosenSociety && (
                     <div className="flex flex-row items-center justify-center space-x-4">
                       <Avatar
                         size="lg"
                         className="drop-shadow-lg"
                         src={
-                          societyInfo.image
-                            ? societyInfo.image
+                          chosenSociety.image
+                            ? chosenSociety.image
                             : DefaultIcon.src
                         }
-                        alt={`${societyInfo.name} icon`}
+                        alt={`${chosenSociety.name} icon`}
                       />
-                      <p>{societyInfo.name}</p>
+                      <p>{chosenSociety.name}</p>
                     </div>
                   )}
                 </div>
@@ -136,7 +136,7 @@ export default function JoinSociety() {
                       variant={variant}
                       color={color}
                       onPress={() => {
-                        setSocietyInfo(undefined);
+                        setChosenSociety(undefined);
                         setIsSubmit(true);
                       }}
                     >
