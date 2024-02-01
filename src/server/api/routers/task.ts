@@ -10,7 +10,7 @@ export const TaskRouter = createTRPCRouter({
         description: z.string().min(0).default(""),
         activated: z.boolean().default(false),
         points: z.number().default(100),
-        societies: z.array(z.object({ id: z.string().min(1) })).min(1),
+        societies: z.array(z.object({ id: z.number().min(1) })).min(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -21,7 +21,7 @@ export const TaskRouter = createTRPCRouter({
           activated: input.activated,
           points: input.points,
           completedUsers: { connect: { id: ctx.session.user.id } },
-          societies: { connect: [{ id: 0 }, { id: 1 }, { id: 2 }] },
+          societies: { connect: input.societies },
         },
       });
     }),
