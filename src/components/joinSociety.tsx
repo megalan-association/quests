@@ -160,7 +160,7 @@ export default function JoinSociety() {
                         onClose();
                       }}
                     >
-                      Submit
+                      Join
                     </Button>
                   </div>
                 )}
