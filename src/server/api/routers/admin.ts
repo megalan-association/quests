@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -16,6 +17,7 @@ export const AdminRouter = createTRPCRouter({
         },
         data: {
           societies: { connect: { id: input.id } },
+          type: "ADMIN",
         },
       });
     }),
