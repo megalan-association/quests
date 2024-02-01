@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import JoinSociety from "~/components/joinSociety";
+import LeaveSociety from "~/components/leaveSociety";
 
 // import { api } from "~/utils/api";
 
@@ -17,6 +18,7 @@ export default function Dummy() {
       <main className="flex min-h-screen flex-col items-center justify-center">
         <>Testing</>
         <JoinSociety />
+        <LeaveSociety />
       </main>
     </>
   );
