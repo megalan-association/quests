@@ -10,7 +10,7 @@ export const TaskRouter = createTRPCRouter({
         description: z.string().min(0).default(""),
         activated: z.boolean().default(false),
         points: z.number().default(100),
-        societies: z.array(z.object({ id: z.string().min(1) })).min(1),
+        societies: z.array(z.object({ id: z.number().min(1) })).min(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -21,7 +21,7 @@ export const TaskRouter = createTRPCRouter({
           activated: input.activated,
           points: input.points,
           completedUsers: { connect: { id: ctx.session.user.id } },
-          societies: { connect: [{ id: 0 }, { id: 1 }, { id: 2 }] },
+          societies: { connect: input.societies },
         },
       });
     }),
@@ -39,9 +39,7 @@ export const TaskRouter = createTRPCRouter({
     )
     .query(({ ctx, input }) => {
       return ctx.db.task.update({
-        where: {
-          id: input.id,
-        },
+        where: { id: input.id },
         data: {
           name: input.name,
           description: input.description,
@@ -54,29 +52,19 @@ export const TaskRouter = createTRPCRouter({
   activate: adminProcedure
     .input(z.object({ id: z.number().min(0) }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.task.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          activated: true,
-        },
+      return ctx.db.task.update({
+        where: { id: input.id },
+        data: { activated: true },
       });
-      return true;
     }),
 
   deactivate: adminProcedure
     .input(z.object({ id: z.number().min(0) }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.task.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          activated: false,
-        },
+      return ctx.db.task.update({
+        where: { id: input.id },
+        data: { activated: false },
       });
-      return true;
     }),
 
   complete: adminProcedure
