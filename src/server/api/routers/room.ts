@@ -11,7 +11,7 @@ export const RoomRouter = createTRPCRouter({
   getRoomStatus: protectedProcedure
     .input(z.object({ roomId: z.number().min(1) }))
     .query(async ({ ctx, input }) => {
-      const room = await ctx.db.room.findFirst({
+      const room = await ctx.db.room.findFirstOrThrow({
         where: {
           id: input.roomId,
         },
@@ -25,11 +25,6 @@ export const RoomRouter = createTRPCRouter({
           },
         },
       });
-      if (!room) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-        });
-      }
 
       const completedTasks = await ctx.db.task.findMany({
         select: {
