@@ -9,14 +9,14 @@ import {
 
 export const UserRouter = createTRPCRouter({
   changeName: protectedProcedure
-    .input(z.object({ newName: z.string().min(2)}))
+    .input(z.object({ name: z.string().min(2)}))
     .mutation(async ({ ctx, input }) => {
       const censor = new CensorSensor();
       // Tier 1: Slurs, Tier 3: Sexual terms
       censor.disableTier(4);    // British profanity (lol)
       censor.disableTier(2);    // Common Profanity
 
-      if (censor.isProfaneIsh(input.newName)) {
+      if (censor.isProfaneIsh(input.name)) {
         throw new TRPCError({ code: "PARSE_ERROR", message: "New name contains profanity"})
       }
 
@@ -25,7 +25,7 @@ export const UserRouter = createTRPCRouter({
           id: ctx.session.user.id,
         },
         data: {
-          name: input.newName, 
+          name: input.name, 
         },
       });
     }),
