@@ -116,7 +116,7 @@ export default function JoinSociety() {
                     <div className="flex flex-row items-center justify-center space-x-4">
                       <Avatar
                         size="lg"
-                        className="drop-shadow-lg"
+                        className="drop-shadow-md"
                         src={
                           chosenSociety.image
                             ? chosenSociety.image

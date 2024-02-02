@@ -15,6 +15,7 @@ import {
   ListboxItem,
 } from "@nextui-org/react";
 import DefaultIcon from "../../public/default.png";
+import { useSession } from "next-auth/react";
 
 type Society = {
   name: string;
@@ -22,25 +23,34 @@ type Society = {
   image: string | null;
 };
 
-export default function LeaveSociety() {
+type Props = {
+  isAuthorized: boolean,
+}
+
+export default function LeaveSociety({ isAuthorized, } : Props) {
   const total = 2;
   const headerStep1 = "Choose a society from the list below to leave.";
   const headerStep2 = "Are you sure you want to leave this society?";
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
   const [currentStep, setCurrentStep] = useState(0);
   const [chosenSociety, setChosenSociety] = useState<Society>();
-
+  
   const societyListArgs = api.admin.getAdminSocietyList.useQuery(undefined, {
+    enabled: isAuthorized,
+    retry: false,
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,
   });
+  const leaveSocietyMutation = api.admin.leaveSociety.useMutation();
+
+  if (!isAuthorized) {
+    return <></>;
+  }
 
   const societyList = societyListArgs.data ? societyListArgs.data.societies : []
-
-  const leaveSocietyMutation = api.admin.leaveSociety.useMutation();
+  
 
   const handleSubmit = () => {
     if (chosenSociety) {
@@ -116,10 +126,10 @@ export default function LeaveSociety() {
                     </div>
                   }
                   {currentStep === total - 1 && chosenSociety && (
-                    <div className="flex flex-row items-center justify-center space-x-4">
+                    <div className="flex flex-row items-center justify-center space-x-4 p-2">
                       <Avatar
                         size="lg"
-                        className="drop-shadow-lg"
+                        className="drop-shadow-md"
                         src={
                           chosenSociety.image
                             ? chosenSociety.image
