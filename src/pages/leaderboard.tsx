@@ -14,7 +14,7 @@ export default function App() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
-  const leaderboardArgs = api.progress.leaderboard.useQuery(undefined, {retry: false, refetchInterval: 15000, refetchOnWindowFocus: true, refetchIntervalInBackground: false});
+  const leaderboardArgs = api.progress.leaderboard.useQuery(undefined, {retry: false, refetchInterval: 20000, refetchOnWindowFocus: false, refetchIntervalInBackground: false});
 
   const leaderboard = leaderboardArgs.isSuccess ? leaderboardArgs.data : [];
 
@@ -26,8 +26,6 @@ export default function App() {
 
     return leaderboard.slice(start, end);
   }, [page, leaderboard]);
-
-  
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start">
