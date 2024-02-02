@@ -10,10 +10,10 @@ import {
   Button,
   useDisclosure,
   Progress,
-  Avatar,
   Input,
+  CardBody,
+  Card,
 } from "@nextui-org/react";
-import DefaultIcon from "../../public/default.png";
 
 type Props = {
   currentName: string;
@@ -51,19 +51,19 @@ export default function ChangeName({ currentName }: Props) {
   return (
     <div className="flex flex-col gap-2">
       <Button onPress={onOpen} className="max-w-fit" color="primary">
-        Leave a society
+        Change name
       </Button>
       <Modal
         isOpen={isOpen}
         placement="top-center"
         onOpenChange={onOpenChange}
-        onClose={() => handleCancel()}
+        onClose={() => handleClose()}
       >
         <ModalContent className="max-h-[50vh]">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col items-center">
-                <span className="text-3xl font-bold">Leave a society</span>
+                <span className="text-3xl font-bold">Change your name</span>
               </ModalHeader>
               <ModalBody className="flex flex-col items-center overflow-y-scroll">
                 <p>{currentStep == 0 ? headerStep1 : headerStep2}</p>
@@ -92,10 +92,10 @@ export default function ChangeName({ currentName }: Props) {
                     />
                   )}
                   {currentStep === total - 1 && (
-                    <div className="flex flex-row items-center justify-center space-x-4 p-2">
-                      <p>
-                        {currentName} to {newName}
-                      </p>
+                    <div className="flex flex-col justify-center items-center p-2 w-full">
+                      <Card shadow="sm">
+                        <CardBody className="text-center">From "{currentName}" to "{newName}"?</CardBody>
+                      </Card>
                     </div>
                   )}
                 </div>
@@ -132,7 +132,7 @@ export default function ChangeName({ currentName }: Props) {
                         onClose();
                       }}
                     >
-                      Leave Society
+                      Yes
                     </Button>
                   </div>
                 )}
