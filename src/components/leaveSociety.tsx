@@ -15,7 +15,6 @@ import {
   ListboxItem,
 } from "@nextui-org/react";
 import DefaultIcon from "../../public/default.png";
-import { useSession } from "next-auth/react";
 
 type Society = {
   name: string;
@@ -24,10 +23,10 @@ type Society = {
 };
 
 type Props = {
-  isAuthorized: boolean,
-}
+  isAuthorized: boolean;
+};
 
-export default function LeaveSociety({ isAuthorized, } : Props) {
+export default function LeaveSociety({ isAuthorized }: Props) {
   const total = 2;
   const headerStep1 = "Choose a society from the list below to leave.";
   const headerStep2 = "Are you sure you want to leave this society?";
@@ -35,7 +34,7 @@ export default function LeaveSociety({ isAuthorized, } : Props) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
   const [chosenSociety, setChosenSociety] = useState<Society>();
-  
+
   const societyListArgs = api.admin.getAdminSocietyList.useQuery(undefined, {
     enabled: isAuthorized,
     retry: false,
@@ -49,8 +48,9 @@ export default function LeaveSociety({ isAuthorized, } : Props) {
     return <></>;
   }
 
-  const societyList = societyListArgs.data ? societyListArgs.data.societies : []
-  
+  const societyList = societyListArgs.data
+    ? societyListArgs.data.societies
+    : [];
 
   const handleSubmit = () => {
     if (chosenSociety) {
@@ -98,9 +98,9 @@ export default function LeaveSociety({ isAuthorized, } : Props) {
                   value={(currentStep / (total - 1)) * 100}
                   className="max-w-sm py-2"
                 />
-                <div className='w-full overflow-y-scroll'>
-                  {currentStep === 0 && societyList &&
-                    <div className="flex max-w-sm h-fit rounded-small border-small border-default-200 px-1 py-2 dark:border-default-100">
+                <div className="w-full overflow-y-scroll">
+                  {currentStep === 0 && societyList && (
+                    <div className="flex h-fit max-w-sm rounded-small border-small border-default-200 px-1 py-2 dark:border-default-100">
                       <Listbox
                         items={societyList}
                         label="Society List"
@@ -108,7 +108,11 @@ export default function LeaveSociety({ isAuthorized, } : Props) {
                         variant="flat"
                       >
                         {(item) => (
-                          <ListboxItem key={item.id} textValue={item.name} showDivider={true}>
+                          <ListboxItem
+                            key={item.id}
+                            textValue={item.name}
+                            showDivider={true}
+                          >
                             <div className="flex flex-row items-center gap-2">
                               <Avatar
                                 alt={item.name}
@@ -124,7 +128,7 @@ export default function LeaveSociety({ isAuthorized, } : Props) {
                         )}
                       </Listbox>
                     </div>
-                  }
+                  )}
                   {currentStep === total - 1 && chosenSociety && (
                     <div className="flex flex-row items-center justify-center space-x-4 p-2">
                       <Avatar

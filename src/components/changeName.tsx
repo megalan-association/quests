@@ -16,10 +16,10 @@ import {
 import DefaultIcon from "../../public/default.png";
 
 type Props = {
-  currentName: string,
-}
+  currentName: string;
+};
 
-export default function ChangeName({ currentName, } : Props) {
+export default function ChangeName({ currentName }: Props) {
   const total = 2;
   const color = "primary";
   const variant = "flat";
@@ -42,7 +42,7 @@ export default function ChangeName({ currentName, } : Props) {
   const handleClose = () => {
     setNewName("");
     setCurrentStep(0);
-  }
+  };
 
   const handleCancel = () => {
     setCurrentStep(0);
@@ -72,7 +72,7 @@ export default function ChangeName({ currentName, } : Props) {
                   value={(currentStep / (total - 1)) * 100}
                   className="max-w-sm py-2"
                 />
-                <div className='w-full overflow-y-scroll'>
+                <div className="w-full overflow-y-scroll">
                   {currentStep === 0 && (
                     <Input
                       size="lg"
@@ -93,7 +93,9 @@ export default function ChangeName({ currentName, } : Props) {
                   )}
                   {currentStep === total - 1 && (
                     <div className="flex flex-row items-center justify-center space-x-4 p-2">
-                      <p>{currentName} to {newName}</p>
+                      <p>
+                        {currentName} to {newName}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -104,7 +106,11 @@ export default function ChangeName({ currentName, } : Props) {
                     <Button
                       variant={variant}
                       color={color}
-                      onPress={() => setCurrentStep((prev) => (prev < total - 1 ? prev + 1 : prev))}
+                      onPress={() =>
+                        setCurrentStep((prev) =>
+                          prev < total - 1 ? prev + 1 : prev,
+                        )
+                      }
                     >
                       Next
                     </Button>
