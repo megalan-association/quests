@@ -92,9 +92,11 @@ export default function ChangeName({ currentName }: Props) {
                     />
                   )}
                   {currentStep === total - 1 && (
-                    <div className="flex flex-col justify-center items-center p-2 w-full">
+                    <div className="flex w-full flex-col items-center justify-center p-2">
                       <Card shadow="sm">
-                        <CardBody className="text-center">From "{currentName}" to "{newName}"?</CardBody>
+                        <CardBody className="text-center">
+                          From "{currentName}" to "{newName}"?
+                        </CardBody>
                       </Card>
                     </div>
                   )}
