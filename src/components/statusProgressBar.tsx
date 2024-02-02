@@ -41,17 +41,10 @@ export default function StatusProgressBar() {
   }
 
   return (
-    <div className="flex w-full max-w-sm flex-row items-center">
-      {/**
+    <div className="flex flex-col w-full max-w-sm gap-2 items-center">
       <div className="flex flex-col text-center">
         <p className="text-2xl font-bold">{completedPoints}</p>
         <p className="">Total points!</p>
-      </div>
-      */}
-      <div className="flex flex-col p-2 text-center">
-        <p className="text-2xl font-bold">
-          {(completedPoints / status.totalTasksPoints) * 100}%
-        </p>
       </div>
       <div className="flex w-full flex-col align-middle">
         <div className="flex flex-row items-center justify-between align-bottom">

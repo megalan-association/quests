@@ -35,49 +35,32 @@ export default function App() {
   }, [page, leaderboard]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start">
-      <div className="container flex flex-col items-center justify-center gap-4 space-y-2 p-4">
+    <main className="flex h-screen flex-col justify-start overflow-y-clip">
+      <div className="container flex w-full h-full flex-col items-center justify-top gap-4 space-y-2 p-4">
         <h1>Leaderboards</h1>
         <StatusProgressBar />
-        <Table
-          aria-label="Example table with client side pagination"
-          bottomContent={
-            <div className="flex w-full justify-center">
-              <Pagination
-                isCompact
-                showControls
-                showShadow
-                color="secondary"
-                page={page}
-                total={pages}
-                onChange={(page) => setPage(page)}
-              />
-            </div>
-          }
-          classNames={{
-            wrapper: "min-h-[222px]",
-          }}
-        >
-          <TableHeader>
-            <TableColumn key="name">Name</TableColumn>
-            <TableColumn key="points">Points</TableColumn>
-          </TableHeader>
-          <TableBody items={items}>
-            {(item) => (
-              <TableRow key={item.name}>
-                {(columnKey) =>
-                  columnKey === "points" ? (
-                    <TableCell>
-                      {Number(getKeyValue(item, columnKey))}
-                    </TableCell>
-                  ) : (
-                    <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-                  )
-                }
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+        <div className="flex h-full w-full overflow-y-scroll">
+          <Table aria-label="Example table with dynamic content" className="w-full" isHeaderSticky={true}>
+            <TableHeader columns={[{key: "name", label: "Name"}, {key: "points", label: "Points"}]}>
+              {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+            </TableHeader>
+            <TableBody items={leaderboard}>
+              {(item) => (
+                <TableRow>
+                  {(columnKey) =>
+                    columnKey === "points" ? (
+                      <TableCell>
+                        {Number(getKeyValue(item, columnKey))}
+                      </TableCell>
+                    ) : (
+                      <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                    )
+                  }
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </main>
   );
