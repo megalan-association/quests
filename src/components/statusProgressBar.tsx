@@ -16,29 +16,36 @@ export default function StatusProgressBar() {
     100: status.totalTasksPoints,
   }
 
-  let milestone: number;
+  let milestoneEnd: number;
 
-  let completedPoints = status.completedPoints;
+  const completedPoints = status.completedPoints ? status.completedPoints : 0;
+  let milestoneStart = 0;
 
-  if (!completedPoints) {
-    milestone = thresholds[40];
-    completedPoints = 0;
+  if (completedPoints === 0) {
+    milestoneEnd = thresholds[40];
   } else if (completedPoints > thresholds[85]) {
-      milestone = thresholds[100];
+    milestoneStart = thresholds[85];
+    milestoneEnd = thresholds[100];
   } else if (completedPoints > thresholds[65]) {
-    milestone = thresholds[85];
+    milestoneStart = thresholds[65];
+    milestoneEnd = thresholds[85];
   } else if (completedPoints > thresholds[40]) {
-    milestone = thresholds[65];
+    milestoneStart = thresholds[40];
+    milestoneEnd = thresholds[65];
   } else { // (completedPoints > 0) {
-    milestone = thresholds[40];
+    milestoneEnd = thresholds[40];
   }
-
-  console.log(Object.entries(thresholds));
 
   return (
     <div className="flex flex-row items-center w-full max-w-sm">
-      <div className="flex text-2xl font-bold p-2">
-        {(completedPoints / status.totalTasksPoints) * 100}%
+      {/**
+      <div className="flex flex-col text-center">
+        <p className="text-2xl font-bold">{completedPoints}</p>
+        <p className="">Total points!</p>
+      </div>
+      */}
+      <div className="flex flex-col text-center p-2">
+        <p className="text-2xl font-bold">{(completedPoints / status.totalTasksPoints) * 100}%</p>
       </div>
       <div className="flex flex-col w-full align-middle">
         <div className="flex flex-row justify-between align-bottom items-center">
@@ -46,10 +53,10 @@ export default function StatusProgressBar() {
             Progress
           </p>
           <p className="text-black/60 text-xs">
-            {milestone - completedPoints} pts to { Object.keys(thresholds).find(key => thresholds[Number(key) as keyof typeof thresholds] === milestone)}%
+            {milestoneEnd - completedPoints} pts to { Object.keys(thresholds).find(key => thresholds[Number(key) as keyof typeof thresholds] === milestoneEnd)}% completion
           </p>
         </div>
-        <Progress size="md" aria-label="Loading..." value={40} />
+        <Progress size="md" aria-label="Loading..." value={((completedPoints - milestoneStart) / milestoneEnd) * 100} />
         <p className="text-black/60 text-xs">Completed <span className="font-bold">{status.completedTasks}</span> out of <span className="font-bold">{status.totalTasks}</span> total tasks</p>
       </div>
     </div> 
