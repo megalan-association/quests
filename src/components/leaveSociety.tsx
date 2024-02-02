@@ -76,7 +76,7 @@ export default function LeaveSociety({ isAuthorized }: Props) {
 
   return (
     <div className="flex flex-col gap-2">
-      <Button onPress={onOpen} className="max-w-fit" color="primary">
+      <Button onPress={onOpen} className="max-w-fit" color="danger">
         Leave a society
       </Button>
       <Modal
