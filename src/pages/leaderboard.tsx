@@ -23,7 +23,6 @@ type User = {
 
 export default function App() {
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
 
   const leaderboardArgs = api.progress.leaderboard.useQuery(undefined, {
     retry: false,
@@ -35,15 +34,6 @@ export default function App() {
   const leaderboard: User[] = leaderboardArgs.isSuccess
     ? leaderboardArgs.data
     : [];
-
-  const pages = Math.ceil(leaderboard.length / rowsPerPage);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return leaderboard.slice(start, end);
-  }, [page, leaderboard]);
 
   const renderCell = React.useCallback(
     (index: number, user: User, columnKey: React.Key) => {
@@ -95,7 +85,7 @@ export default function App() {
               )}
             </TableHeader>
             <TableBody>
-              {items.map((item, index) => (
+              {leaderboard.map((item, index) => (
                 <TableRow key={item.id}>
                   {(columnKey) => (
                     <TableCell>{renderCell(index + 1, item, columnKey)}</TableCell>
