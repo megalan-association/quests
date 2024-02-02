@@ -1,20 +1,27 @@
 import React, { useState } from "react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue} from "@nextui-org/react";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Pagination,
+  getKeyValue,
+} from "@nextui-org/react";
 import { api } from "~/utils/api";
 import StatusProgressBar from "~/components/statusProgressBar";
-
-type User = {
-  id: number;
-  name: string | null;
-  image: string | null;
-  points: number;
-}
 
 export default function App() {
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
-  const leaderboardArgs = api.progress.leaderboard.useQuery(undefined, {retry: false, refetchInterval: 20000, refetchOnWindowFocus: false, refetchIntervalInBackground: false});
+  const leaderboardArgs = api.progress.leaderboard.useQuery(undefined, {
+    retry: false,
+    refetchInterval: 20000,
+    refetchOnWindowFocus: false,
+    refetchIntervalInBackground: false,
+  });
 
   const leaderboard = leaderboardArgs.isSuccess ? leaderboardArgs.data : [];
 
@@ -32,7 +39,7 @@ export default function App() {
       <div className="container flex flex-col items-center justify-center gap-4 space-y-2 p-4">
         <h1>Leaderboards</h1>
         <StatusProgressBar />
-        <Table 
+        <Table
           aria-label="Example table with client side pagination"
           bottomContent={
             <div className="flex w-full justify-center">
@@ -58,9 +65,15 @@ export default function App() {
           <TableBody items={items}>
             {(item) => (
               <TableRow key={item.name}>
-                {(columnKey) => (
-                  columnKey === "points" ? <TableCell>{Number(getKeyValue(item, columnKey))}</TableCell> : <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-                )}
+                {(columnKey) =>
+                  columnKey === "points" ? (
+                    <TableCell>
+                      {Number(getKeyValue(item, columnKey))}
+                    </TableCell>
+                  ) : (
+                    <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                  )
+                }
               </TableRow>
             )}
           </TableBody>
