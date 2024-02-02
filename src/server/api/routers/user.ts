@@ -8,7 +8,7 @@ import {
 
 export const UserRouter = createTRPCRouter({
   changeName: protectedProcedure
-    .input(z.object({ newName: z.string().min(0) }))
+    .input(z.object({ newName: z.string().min(2) }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.user.update({
         where: {
