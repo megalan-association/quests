@@ -49,7 +49,7 @@ export default function App() {
     (index: number, user: User, columnKey: React.Key) => {
       switch (columnKey) {
         case "index":
-          return <p>{index}</p>;
+          return <p className="text-center">{index}</p>;
         case "name":
           return (
             <div className="flex flex-row items-center space-x-4">
@@ -63,7 +63,7 @@ export default function App() {
             </div>
           );
         case "points":
-          return <p>{Number(user.points)}</p>;
+          return <p className="text-center">{Number(user.points)}</p>;
         default:
           return user[columnKey as keyof typeof user];
       }
@@ -85,19 +85,20 @@ export default function App() {
           >
             <TableHeader
               columns={[
-                { key: "name", label: "Name" },
+                { key: "index", label: "Rank"},
+                { key: "name", label: "User" },
                 { key: "points", label: "Points" },
               ]}
             >
               {(column) => (
-                <TableColumn key={column.key}>{column.label}</TableColumn>
+                column.key === "index" ? <TableColumn key={column.key}><p className="text-center">{column.label}</p></TableColumn> : <TableColumn key={column.key}>{column.label}</TableColumn>
               )}
             </TableHeader>
             <TableBody>
               {items.map((item, index) => (
                 <TableRow key={item.id}>
                   {(columnKey) => (
-                    <TableCell>{renderCell(index, item, columnKey)}</TableCell>
+                    <TableCell>{renderCell(index + 1, item, columnKey)}</TableCell>
                   )}
                 </TableRow>
               ))}
