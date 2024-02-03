@@ -2,6 +2,7 @@ import { $Enums } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import UnAuthorized from "~/components/unauthorized";
 import Layout from "./_layout";
+import CreateTask from "~/components/createTask";
 
 export default function ManageTasks() {
   const { data: session, update: update } = useSession({ required: true });
@@ -22,6 +23,7 @@ export default function ManageTasks() {
   return (
     <Layout>
       <main className="flex flex-col items-center">
+        <CreateTask handleChange={handleChange}/>
       </main>
     </Layout>
   ) 
