@@ -24,9 +24,10 @@ type Society = {
 
 type Props = {
   isAuthorized: boolean;
+  handleChange: () => void;
 };
 
-export default function LeaveSociety({ isAuthorized }: Props) {
+export default function LeaveSociety({ isAuthorized, handleChange }: Props) {
   const total = 2;
   const headerStep1 = "Choose a society from the list below to leave.";
   const headerStep2 = "Are you sure you want to leave this society?";
@@ -58,6 +59,7 @@ export default function LeaveSociety({ isAuthorized }: Props) {
         id: chosenSociety.id,
       });
       handleCancel();
+      handleChange();
     }
   };
 
