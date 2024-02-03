@@ -15,7 +15,11 @@ import {
 } from "@nextui-org/react";
 import DefaultIcon from "../../public/default.png";
 
-export default function JoinSociety() {
+type Props = {
+  handleChange: () => void;
+};
+
+export default function JoinSociety({ handleChange }: Props) {
   const total = 2;
   const color = "primary";
   const variant = "flat";
@@ -56,6 +60,8 @@ export default function JoinSociety() {
     }
 
     handleCancel();
+
+    handleChange();
   };
 
   const handleCancel = () => {
