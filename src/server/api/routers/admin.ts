@@ -73,6 +73,16 @@ export const AdminRouter = createTRPCRouter({
       });
     }),
 
+  getAllSocieties: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.society.findMany({
+      select: {
+        id: true,
+        name: true,
+        image: true,
+      }
+    });
+  }),
+
   getAdminSocietyList: adminProcedure.query(async ({ ctx }) => {
     return ctx.db.user.findFirst({
       where: { id: ctx.session.user.id },
