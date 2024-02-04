@@ -10,7 +10,7 @@ export default function ManageTasks() {
   if (!session) {
     return <>Loading...</>;
   } else if (session.user.type !== $Enums.UserType.ADMIN) {
-    return <UnAuthorized />
+    return <UnAuthorized />;
   }
 
   const handleChange = async () => {
@@ -23,8 +23,8 @@ export default function ManageTasks() {
   return (
     <Layout>
       <main className="flex flex-col items-center">
-        <CreateTask handleChange={handleChange}/>
+        <CreateTask handleChange={handleChange} />
       </main>
     </Layout>
-  ) 
+  );
 }
