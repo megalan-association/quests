@@ -17,14 +17,7 @@ const Landing = () => {
               alt="MegaLAN: UNSW's Gaming Convention"
               width={640}
               height={72}
-              className="block dark:hidden w-full sm:w-[640px] mx-auto"
-            />
-            <Image 
-              src="/MegaLAN_Logo_Horizontal_White.png"
-              alt="MegaLAN: UNSW's Gaming Convention"
-              width={640}
-              height={72}
-              className="hidden dark:block w-full sm:w-[640px] mx-auto"
+              className="w-full sm:w-[640px] mx-auto"
             />
             <div className="text-center py-1">
               <Button
