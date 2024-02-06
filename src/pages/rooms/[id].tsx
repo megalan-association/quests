@@ -15,6 +15,7 @@ import { Avatar, Chip, Divider, Progress } from "@nextui-org/react";
 import { useState } from "react";
 import React from "react";
 import { CheckIcon } from "@radix-ui/react-icons";
+import CompleteTaskModal from "~/components/CompleteTaskModal";
 
 const Room = ({ room }: { room: roomData }) => {
   const router = useRouter();
@@ -22,8 +23,11 @@ const Room = ({ room }: { room: roomData }) => {
   const [selectedSocieties, setSelectedSocieties] = useState<roomSocieties[]>(
     [],
   );
-
   const [data, setData] = useState(room);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(-1);
+  const util = api.useUtils();
+
   const progress = api.progress.roomStatus.useQuery({ roomId: room.info.id });
 
   if (router.isFallback || session.status === "loading") {
@@ -78,57 +82,52 @@ const Room = ({ room }: { room: roomData }) => {
     setData({ ...room, completedTasks, incompleteTasks });
   };
 
+  const handleModalClose = () => {
+    // fetch latest room data incase user completed task after closing modal
+    util.room.getRoomData
+      .fetch({ roomId: room.info.id })
+      .then((updatedData) => setData({ ...updatedData }));
+
+    setShowModal(false);
+  };
+
   return (
-    <Layout>
-      <h1 className="w-full pt-6 text-center text-3xl font-bold">
-        {room.info.name} Room
-      </h1>
-      <div className="space-y-2 p-4">
-        <div className="flex flex-row justify-between">
-          <p className="text-medium font-bold">Progress</p>
-          <p className="text-medium">
-            {progress.data?.completedPoints} / {progress.data?.totalTasksPoints}{" "}
-            pts
+    <>
+      <CompleteTaskModal
+        isOpen={showModal}
+        handleClose={handleModalClose}
+        taskId={selectedTask}
+        userId={session.data.user.id}
+      />
+      <Layout>
+        <h1 className="w-full pt-6 text-center text-3xl font-bold">
+          {room.info.name} Room
+        </h1>
+        <div className="space-y-2 p-4">
+          <div className="flex flex-row justify-between">
+            <p className="text-medium font-bold">Progress</p>
+            <p className="text-medium">
+              {progress.data?.completedPoints} /{" "}
+              {progress.data?.totalTasksPoints} pts
+            </p>
+          </div>
+          <Progress
+            aria-label="progress"
+            size="md"
+            isIndeterminate={progress.isLoading || progress.isError}
+            value={progress.data?.completedPoints ?? 0}
+            maxValue={progress.data?.totalTasksPoints ?? 10}
+            color="warning"
+          />
+          <p className="text-sm text-foreground/60">
+            Completed {progress.data?.completedTasks} out of{" "}
+            {progress.data?.totalTasks} Tasks
           </p>
         </div>
-        <Progress
-          size="md"
-          isIndeterminate={progress.isLoading || progress.isError}
-          value={progress.data?.completedPoints ?? 0}
-          maxValue={progress.data?.totalTasksPoints ?? 10}
-          color="warning"
-        />
-        <p className="text-sm text-foreground/60">
-          Completed {progress.data?.completedTasks} out of{" "}
-          {progress.data?.totalTasks} Tasks
-        </p>
-      </div>
-      <div className="space-y-2 p-4">
-        <p className="text-medium font-bold">Filter Societies</p>
-        <div className="space-x-2">
-          {selectedSocieties.map((soc, idx) => (
-            <Chip
-              key={idx}
-              avatar={
-                <Avatar
-                  src={soc.image ?? undefined}
-                  alt="society-logo"
-                  name={soc.name}
-                  fallback
-                />
-              }
-              onClick={() => handleFilterDeselect(soc)}
-              endContent={<CheckIcon />}
-              size="lg"
-              radius="sm"
-              color="success"
-            >
-              {soc.name}
-            </Chip>
-          ))}
-          {room.societies
-            .filter((s) => !selectedSocieties.map((ss) => ss.id).includes(s.id))
-            .map((soc, idx) => (
+        <div className="space-y-2 p-4">
+          <p className="text-medium font-bold">Filter Societies</p>
+          <div className="space-x-2">
+            {selectedSocieties.map((soc, idx) => (
               <Chip
                 key={idx}
                 avatar={
@@ -139,46 +138,75 @@ const Room = ({ room }: { room: roomData }) => {
                     fallback
                   />
                 }
-                onClick={() => handleFilterSelect(soc)}
+                onClick={() => handleFilterDeselect(soc)}
+                endContent={<CheckIcon />}
                 size="lg"
                 radius="sm"
+                color="success"
               >
                 {soc.name}
               </Chip>
             ))}
+            {room.societies
+              .filter(
+                (s) => !selectedSocieties.map((ss) => ss.id).includes(s.id),
+              )
+              .map((soc, idx) => (
+                <Chip
+                  key={idx}
+                  avatar={
+                    <Avatar
+                      src={soc.image ?? undefined}
+                      alt="society-logo"
+                      name={soc.name}
+                      fallback
+                    />
+                  }
+                  onClick={() => handleFilterSelect(soc)}
+                  size="lg"
+                  radius="sm"
+                >
+                  {soc.name}
+                </Chip>
+              ))}
+          </div>
         </div>
-      </div>
-      <div className="space-y-8 px-4 py-8">
-        {data.incompleteTasks.map((task, idx) => (
-          <React.Fragment key={idx}>
-            <TaskCard
-              key={task.id}
-              data={task}
-              showComplete
-              isCompleted={false}
-              userId={session.data.user.id}
-            />
-          </React.Fragment>
-        ))}
-      </div>
-      {data.completedTasks.length > 0 && (
-        <>
-          <h1 className="pt-8 text-center text-xl font-bold">
-            Completed Tasks
-          </h1>
-          <div className="space-y-8 p-4">
-            {data.completedTasks.map((task) => (
+        <div className="space-y-8 px-4 py-8">
+          {data.incompleteTasks.map((task, idx) => (
+            <React.Fragment key={idx}>
               <TaskCard
                 key={task.id}
                 data={task}
                 showComplete
-                isCompleted={true}
+                isCompleted={false}
+                handleShowModal={(id) => {
+                  setSelectedTask(id);
+                  setShowModal(true);
+                }}
               />
-            ))}
-          </div>
-        </>
-      )}
-    </Layout>
+            </React.Fragment>
+          ))}
+        </div>
+        {data.completedTasks.length > 0 && (
+          <>
+            <h1 className="pt-8 text-center text-xl font-bold">
+              Completed Tasks
+            </h1>
+            <div className="space-y-8 p-4">
+              {data.completedTasks.map((task) => (
+                <TaskCard
+                  key={task.id}
+                  data={task}
+                  showComplete
+                  isCompleted={true}
+                  handleShowModal={(id) => {}}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </Layout>
+    </>
   );
 };
 

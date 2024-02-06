@@ -25,6 +25,9 @@ export const RoomRouter = createTRPCRouter({
               image: true,
             },
           },
+          id: true,
+          name: true,
+          image: true,
         },
       });
 
@@ -93,6 +96,7 @@ export const RoomRouter = createTRPCRouter({
       });
 
       return {
+        info: { id: room.id, name: room.name, image: room.image },
         societies: room.societies,
         completedTasks,
         incompleteTasks,
