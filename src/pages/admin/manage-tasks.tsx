@@ -1,7 +1,7 @@
 import { $Enums } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import UnAuthorized from "~/components/unauthorized";
-import Layout from "./_layout";
+import Layout from "../_layout";
 import CreateTask from "~/components/createTask";
 
 export default function ManageTasks() {
