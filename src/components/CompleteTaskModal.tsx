@@ -7,6 +7,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from "@nextui-org/react";
+import { useQRCode } from "next-qrcode";
 
 type Props = {
   isOpen: boolean;
@@ -21,6 +22,7 @@ const CompleteTaskModal: React.FC<Props> = ({
   isOpen,
   handleClose,
 }) => {
+  const { Canvas } = useQRCode();
   return (
     <Modal
       isOpen={isOpen}
@@ -34,11 +36,18 @@ const CompleteTaskModal: React.FC<Props> = ({
         </ModalHeader>
         <ModalBody className="flex flex-col items-center">
           <p>Ask a Society Executive to scan this</p>
-          {/* TODO: Generate QR Code for This Task */}
-          <Image src="/default.png" />
-          <p>
-            {userId}:{taskId}
-          </p>
+          <Canvas
+            text={userId + ":" + taskId}
+            options={{
+              errorCorrectionLevel: "M",
+              scale: 4,
+              width: 300,
+              color: {
+                dark: "#000000",
+                light: "#FFFFFF",
+              },
+            }}
+          />
         </ModalBody>
         <ModalFooter>
           <Button
