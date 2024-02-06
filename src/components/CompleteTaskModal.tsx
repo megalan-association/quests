@@ -23,6 +23,7 @@ const CompleteTaskModal: React.FC<Props> = ({
   handleClose,
 }) => {
   const { Canvas } = useQRCode();
+
   return (
     <Modal
       isOpen={isOpen}
@@ -35,7 +36,10 @@ const CompleteTaskModal: React.FC<Props> = ({
           <h1>Complete Task</h1>
         </ModalHeader>
         <ModalBody className="flex flex-col items-center">
-          <p>Ask a Society Executive to scan this</p>
+          <p className="text-center">
+            Ask a Society Executive to scan this once you have completed this
+            task
+          </p>
           <Canvas
             text={userId + ":" + taskId}
             options={{
