@@ -13,6 +13,7 @@ import {
   Select,
   SelectItem,
   Checkbox,
+  Input,
 } from "@nextui-org/react";
 
 import Societies from "./createTaskComponents/societies";
@@ -40,17 +41,20 @@ type Society = {
     "Your task is created! Here is a preview of your task",
   ];
 
+const pointValues = [100, 200, 300, 400, 500];
+
 export default function CreateTask({ handleChange }: Props) {
   const total = 6;
   const color = "primary";
   const variant = "flat";
 
   // Collab is tracked on its own due to complicated data structure with nextui...
+  // We also have string values because of the weird way Select works with displaying values
   const defaultTask = {
     main: "",
     name: "",
     desc: "",
-    points: 100,
+    points: "100",
     activated: true,
   };
   
@@ -178,7 +182,39 @@ export default function CreateTask({ handleChange }: Props) {
                     }
                   </div>
                   }
-                  {/* {currentStep == 1 && <NameAndPoints _setName={(name) => setName(name)} _setPoints={(points => setPoints(points))}/>} */}
+                  {currentStep == 1 && 
+                    <div className="flex flex-col w-full gap-8">
+                      <Input
+                        isRequired
+                        type="string"
+                        label="Task Name"
+                        className="max-w-xs"
+                        size="md"
+                        isClearable={true}
+                        value={task.name}
+                        onValueChange={(value: string) => setTask({...task, name: value})}
+                        onClear={() => setTask({...task, name: ""})}
+                      />
+                      {task.name.length > 0 &&
+                        <Select
+                          label="Task points"
+                          placeholder="Select the points value for this task"
+                          className="max-w-xs"
+                          isRequired={true}
+                          itemType="number"
+                          selectionMode="single"
+                          selectedKeys={[task.points]}
+                          onSelectionChange={(key) => setTask({...task, points: Object.values(key)[1]})}
+                        >
+                          {pointValues.map((points) => (
+                            <SelectItem key={points} value={points} textValue={String(points)}>
+                              {points}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      }
+                    </div>
+                  }
                   {currentStep == 2 && <div></div>}
                   {currentStep == 3 && <div></div>}
                   {currentStep == 4 && <div></div>}
@@ -203,7 +239,7 @@ export default function CreateTask({ handleChange }: Props) {
                   </div>
                 }
                 
-                {/**currentStep == 1 && name.length > 0 &&
+                {currentStep == 1 && task.name.length > 0 &&
                   <div className="flex w-full flex-row justify-between gap-2">
                     <Button variant="light" color="primary" onPress={() => setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev))}>
                       Back
@@ -219,7 +255,7 @@ export default function CreateTask({ handleChange }: Props) {
                       Next Step
                     </Button>
                   </div>
-                */}
+                }
               </ModalFooter>
             </>
           )}
