@@ -10,21 +10,25 @@ import {
   Button,
   useDisclosure,
   Progress,
-  Input,
-  Avatar,
+  Select,
+  SelectItem,
+  Checkbox,
 } from "@nextui-org/react";
-import DefaultIcon from "../../public/default.png";
+
 import Societies from "./createTaskComponents/societies";
+import NameAndPoints from "./createTaskComponents/nameAndPoints";
 
 type Props = {
   handleChange: () => void;
 };
 
-export default function CreateTask({ handleChange }: Props) {
-  const total = 6;
-  const color = "primary";
-  const variant = "flat";
-  // checkbox for 2nd society list (all societiwess
+type Society = {
+  name: string;
+  id: number;
+  image: string | null;
+};
+
+// checkbox for 2nd society list (all societiwess
   // points max 500
   // Step 4 is the submit,
   // error handling client side with nextui input fields (minimum length)
@@ -36,34 +40,69 @@ export default function CreateTask({ handleChange }: Props) {
     "Your task is created! Here is a preview of your task",
   ];
 
+export default function CreateTask({ handleChange }: Props) {
+  const total = 6;
+  const color = "primary";
+  const variant = "flat";
+
+  // Collab is tracked on its own due to complicated data structure with nextui...
+  const defaultTask = {
+    main: "",
+    name: "",
+    desc: "",
+    points: 100,
+    activated: true,
+  };
+  
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
-  const taskMutation = api.task.create.useMutation();
+  const [task, setTask] = useState(defaultTask);
 
-  const [societies, setSocieties] = useState<{ id: number }[]>([]);
-  const [name, setName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [points, setPoints] = useState(100);
-  const [isActive, setIsActive] = useState(false);
+  const [isCollab, setIsCollab] = React.useState(false);
+  const [collabKeys, setCollabKeys] = React.useState(new Set<string>([]));
+
+  const taskMutation = api.task.create.useMutation();
+  const joinedSocietiesArgs = api.admin.getAdminSocietyList.useQuery(
+    undefined,
+    { retry: false, refetchOnWindowFocus: false },
+  );
+  const allSocietiesArgs = api.admin.getAllSocieties.useQuery(undefined, {
+    retry: false,
+    refetchOnWindowFocus: true,
+  });
+
+  const joinedSocieties = joinedSocietiesArgs.data?.societies;
+  const allSocieties = allSocietiesArgs.data;
+
+  const displayCollabKeys = React.useMemo(
+    () => Array.from(collabKeys).join(", ").replaceAll("_", " "),
+    [collabKeys],
+  );
+
+  if (
+    joinedSocietiesArgs.isError ||
+    !joinedSocieties ||
+    allSocietiesArgs.isError ||
+    !allSocieties
+  ) {
+    return <>Loading...</>;
+  }
 
   const handleSubmit = () => {
     handleChange();
-    taskMutation.mutate({
-      name,
-      description: desc,
-      activated: isActive,
-      points,
-      societies,
-    });
+    // taskMutation.mutate({
+    //   name,
+    //   description: desc,
+    //   activated: isActive,
+    //   points,
+    //   societies,
+    // });
   };
 
   const handleCancel = () => {
     setCurrentStep(0);
-    setSocieties([]);
-    setName("");
-    setDesc("");
-    setPoints(100);
-    setIsActive(false);
+    setIsCollab(false);
+    setTask(defaultTask);
   };
 
   return (
@@ -91,19 +130,62 @@ export default function CreateTask({ handleChange }: Props) {
                   className="max-w-sm py-2"
                 />
                 <div className="flex flex-col items-center">
-                  {currentStep == 0 && (
-                    <Societies
-                      setSocieties={(societies) => setSocieties(societies)}
-                    />
-                  )}
-                  {currentStep == 1 && <div></div>}
+                  {currentStep == 0 && 
+                  <div className="flex flex-col w-full gap-4">
+                    <div className="flex flex-col gap-4">
+                      <Select
+                        label="Select Primary society"
+                        className="max-w-xs"
+                        isRequired={true}
+                        itemType="string"
+                        selectedKeys={task.main}
+                        onSelectionChange={(key) => setTask({...task, main: Object.values(key)[0]})}
+                      >
+                        {joinedSocieties.map((society, index) => 
+                          <SelectItem key={index} value={society.name}>
+                            {society.name}
+                          </SelectItem>
+                        )}
+                      </Select>
+                    </div>
+                    {task.main.length > 0 && 
+                      <Checkbox
+                        isSelected={isCollab}
+                        onValueChange={() => setIsCollab(!isCollab)}
+                      >
+                        This task is a collab
+                      </Checkbox>
+                    }
+                    {isCollab &&
+                    <Select
+                      label="Select Collaboration Socities"
+                      className="max-w-xs"
+                      isRequired={true}
+                      itemType="string"
+                      selectionMode="multiple"
+                      selectedKeys={displayCollabKeys}
+                      // @ts-expect-error
+                      onChange={setCollabKeys}
+                    >
+                      {allSocieties
+                        .filter((society) => society.name != task.main)
+                        .map((society) => 
+                        <SelectItem key={society.name} value={society.name}>
+                          {society.name}
+                        </SelectItem>
+                      )}
+                    </Select>
+                    }
+                  </div>
+                  }
+                  {/* {currentStep == 1 && <NameAndPoints _setName={(name) => setName(name)} _setPoints={(points => setPoints(points))}/>} */}
                   {currentStep == 2 && <div></div>}
                   {currentStep == 3 && <div></div>}
                   {currentStep == 4 && <div></div>}
                 </div>
               </ModalBody>
               <ModalFooter>
-                {currentStep == 0 && societies.length > 0 && (
+                {currentStep == 0 && task.main.length > 0 && 
                   <div className="flex w-full flex-row justify-between gap-2">
                     <Button variant="light" color="danger" onPress={onClose}>
                       Cancel
@@ -119,7 +201,25 @@ export default function CreateTask({ handleChange }: Props) {
                       Next Step
                     </Button>
                   </div>
-                )}
+                }
+                
+                {/**currentStep == 1 && name.length > 0 &&
+                  <div className="flex w-full flex-row justify-between gap-2">
+                    <Button variant="light" color="primary" onPress={() => setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev))}>
+                      Back
+                    </Button>
+                    <Button
+                      color="primary"
+                      onPress={() =>
+                        setCurrentStep((prev) =>
+                          prev < total - 1 ? prev + 1 : prev,
+                        )
+                      }
+                    >
+                      Next Step
+                    </Button>
+                  </div>
+                */}
               </ModalFooter>
             </>
           )}
