@@ -8,6 +8,8 @@ import {
   ModalHeader,
 } from "@nextui-org/react";
 import { useQRCode } from "next-qrcode";
+import { useEffect, useState } from "react";
+import { api } from "~/utils/api";
 
 type Props = {
   isOpen: boolean;
