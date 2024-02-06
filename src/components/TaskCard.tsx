@@ -15,6 +15,7 @@ import { roomTask } from "~/server/api/routers/room";
 import SeeMore from "./SeeMore";
 import { useState } from "react";
 import CompleteTaskModal from "./CompleteTaskModal";
+import React from "react";
 
 type Props = {
   data: roomTask;
@@ -42,8 +43,9 @@ const TaskCard: React.FC<Props> = ({
       <Card>
         <CardHeader className="space-x-4">
           <AvatarGroup isBordered max={3} size="sm">
-            {data.societies.map((soc) => (
+            {data.societies.map((soc, idx) => (
               <Avatar
+                key={idx}
                 alt="society-logo"
                 src={soc.image ?? undefined}
                 name={soc.name}
@@ -55,12 +57,12 @@ const TaskCard: React.FC<Props> = ({
             <h1 className="text-lg ">{data.name}</h1>
             <div className="flex flex-row items-center">
               {data.societies.map((soc, idx) => (
-                <>
+                <React.Fragment key={idx}>
                   <h1 className="text-sm text-foreground/60">{soc.name}</h1>
                   {idx !== data.societies.length - 1 && (
                     <DotFilledIcon className="text-foreground/60" />
                   )}
-                </>
+                </React.Fragment>
               ))}
             </div>
           </div>

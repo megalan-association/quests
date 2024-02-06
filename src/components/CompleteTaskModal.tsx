@@ -32,7 +32,7 @@ const CompleteTaskModal: React.FC<Props> = ({
         <ModalHeader>
           <h1>Complete Task</h1>
         </ModalHeader>
-        <ModalBody>
+        <ModalBody className="flex flex-col items-center">
           <p>Ask a Society Executive to scan this</p>
           {/* TODO: Generate QR Code for This Task */}
           <Image src="/default.png" />
