@@ -37,13 +37,12 @@ export const TaskRouter = createTRPCRouter({
         societies: z.array(z.object({ id: z.string().min(1) })).min(1),
       }),
     )
-    .query(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       return ctx.db.task.update({
         where: { id: input.id },
         data: {
           name: input.name,
           description: input.description,
-          activated: input.activated,
           points: input.points,
         },
       });
