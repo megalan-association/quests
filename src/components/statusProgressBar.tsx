@@ -46,7 +46,7 @@ export default function StatusProgressBar() {
         <p className="text-2xl font-bold">{completedPoints}</p>
         <p className="">Total points!</p>
       </div>
-      <div className="flex w-full flex-col align-middle">
+      <div className="flex w-full flex-col align-middle space-y-2">
         <div className="flex flex-row items-center justify-between align-bottom">
           <p className="font-bold">Progress</p>
           <p className="text-xs text-black/60">
@@ -62,6 +62,7 @@ export default function StatusProgressBar() {
         <Progress
           size="md"
           aria-label="Loading..."
+          color="warning"
           value={((completedPoints - milestoneStart) / milestoneEnd) * 100}
         />
         <p className="text-xs text-black/60">
