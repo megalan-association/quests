@@ -15,46 +15,40 @@ import {
   Checkbox,
   Input,
   Textarea,
+  Radio,
+  RadioGroup,
 } from "@nextui-org/react";
 
 type Props = {
   handleChange: () => void;
 };
 
-type Society = {
-  name: string;
-  id: number;
-  image: string | null;
+// Collab is tracked on its own due to complicated data structure with nextui...
+// We also have string values because of the weird way Select works with displaying values
+const defaultTask = {
+  main: "",
+  name: "",
+  desc: "",
+  points: "100",
+  activated: true,
 };
-
-// checkbox for 2nd society list (all societiwess
-// points max 500
-// Step 4 is the submit,
-// error handling client side with nextui input fields (minimum length)
 
 const pointValues = [100, 200, 300, 400, 500];
 
 export default function CreateTask({ handleChange }: Props) {
-  const total = 6;
-  const color = "primary";
-  const variant = "flat";
-
-  // Collab is tracked on its own due to complicated data structure with nextui...
-  // We also have string values because of the weird way Select works with displaying values
-  const defaultTask = {
-    main: "",
-    name: "",
-    desc: "",
-    points: "100",
-    activated: true,
-  };
+  const total = 4;
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
   const [task, setTask] = useState(defaultTask);
 
   const [isCollab, setIsCollab] = React.useState(false);
+  // "society1, society2"
   const [collabKeys, setCollabKeys] = React.useState(new Set<string>([]));
+  const displayCollabKeys = React.useMemo(
+    () => Array.from(collabKeys).join(", ").replaceAll("_", " "),
+    [collabKeys],
+  );
 
   const taskMutation = api.task.create.useMutation();
   const joinedSocietiesArgs = api.admin.getAdminSocietyList.useQuery(
@@ -69,11 +63,6 @@ export default function CreateTask({ handleChange }: Props) {
   const joinedSocieties = joinedSocietiesArgs.data?.societies;
   const allSocieties = allSocietiesArgs.data;
 
-  const displayCollabKeys = React.useMemo(
-    () => Array.from(collabKeys).join(", ").replaceAll("_", " "),
-    [collabKeys],
-  );
-
   if (
     joinedSocietiesArgs.isError ||
     !joinedSocieties ||
@@ -84,14 +73,27 @@ export default function CreateTask({ handleChange }: Props) {
   }
 
   const handleSubmit = () => {
+    let societyNames = [task.main];
+
+    if (collabKeys.size > 0) {
+      const collabNames = Array.from(collabKeys);
+      societyNames.concat(collabNames);
+    }
+
+    const societies = societyNames.map(
+      (name) => allSocieties.find((society) => society.name == name)!.id,
+    );
+
+    taskMutation.mutate({
+      name: task.name,
+      description: task.desc,
+      activated: task.activated,
+      points: Number(task.points),
+      societies: societies.map((id: number) => ({ id: id })),
+    });
+
     handleChange();
-    // taskMutation.mutate({
-    //   name,
-    //   description: desc,
-    //   activated: isActive,
-    //   points,
-    //   societies,
-    // });
+    handleCancel();
   };
 
   const handleCancel = () => {
@@ -134,14 +136,14 @@ export default function CreateTask({ handleChange }: Props) {
                   </p>
                 ) : currentStep === 3 ? (
                   <p className="whitespace-pre-line">
-                    Is your task <b>available to complete?</b>
-                    <br />
                     You can activate or deactivate a task at a later time in the{" "}
                     <b>"Manage Tasks"</b> section
                   </p>
                 ) : (
                   <p className="whitespace-pre-line">
-                    "Your task is created! Here is a preview of your task
+                    Your task is created!
+                    <br />
+                    Here is a preview of your task
                   </p>
                 )}
                 <Progress
@@ -151,25 +153,27 @@ export default function CreateTask({ handleChange }: Props) {
                 />
                 <div className="flex flex-col items-center">
                   {currentStep == 0 && (
-                    <div className="flex w-full flex-col gap-4">
-                      <div className="flex flex-col gap-4">
-                        <Select
-                          label="Main society"
-                          className="max-w-sm"
-                          isRequired={true}
-                          itemType="string"
-                          selectedKeys={task.main}
-                          onSelectionChange={(key) =>
-                            setTask({ ...task, main: Object.values(key)[0] })
-                          }
-                        >
-                          {joinedSocieties.map((society, index) => (
-                            <SelectItem key={index} value={society.name}>
-                              {society.name}
-                            </SelectItem>
-                          ))}
-                        </Select>
-                      </div>
+                    <div className="flex w-full flex-col gap-8">
+                      <Select
+                        label="Your society"
+                        className="max-w-sm"
+                        isRequired={true}
+                        itemType="string"
+                        selectionMode="single"
+                        selectedKeys={[task.main]}
+                        onSelectionChange={(key) =>
+                          setTask({
+                            ...task,
+                            main: String(Object.values(key)[0]),
+                          })
+                        }
+                      >
+                        {joinedSocieties.map((society) => (
+                          <SelectItem key={society.name} value={society.name}>
+                            {society.name}
+                          </SelectItem>
+                        ))}
+                      </Select>
                       {task.main.length > 0 && (
                         <Checkbox
                           isSelected={isCollab}
@@ -252,12 +256,33 @@ export default function CreateTask({ handleChange }: Props) {
                       placeholder="Enter your task description"
                       className="max-w-sm"
                       value={task.desc}
-                      onChange={(value) =>
-                        setTask({ ...task, desc: value.target.value })
+                      onChange={(e) =>
+                        setTask({ ...task, desc: e.target.value })
                       }
                     />
                   )}
-                  {currentStep == 3 && <div></div>}
+                  {currentStep == 3 && (
+                    <div className="flex flex-col gap-4">
+                      <p>Is your task available to be completed right now?</p>
+
+                      <RadioGroup
+                        value={task.activated ? "yes" : "no"}
+                        onChange={(e) =>
+                          setTask({
+                            ...task,
+                            activated: e.target.value === "yes",
+                          })
+                        }
+                      >
+                        <Radio value="yes">Yes</Radio>
+                        <Radio value="no">No</Radio>
+                      </RadioGroup>
+                      <p className="text-sm text-gray-600">
+                        This is so participants do not try to complete a task
+                        that is not yet set up or expired.
+                      </p>
+                    </div>
+                  )}
                   {currentStep == 4 && <div></div>}
                 </div>
               </ModalBody>
@@ -282,7 +307,6 @@ export default function CreateTask({ handleChange }: Props) {
                 {currentStep == 1 && task.name.length > 0 && (
                   <div className="flex w-full flex-row justify-between gap-2">
                     <Button
-                      variant="light"
                       color="primary"
                       onPress={() =>
                         setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev))
@@ -322,6 +346,28 @@ export default function CreateTask({ handleChange }: Props) {
                       }
                     >
                       Next Step
+                    </Button>
+                  </div>
+                )}
+                {currentStep == 3 && (
+                  <div className="flex w-full flex-row justify-between gap-2">
+                    <Button
+                      variant="light"
+                      color="primary"
+                      onPress={() =>
+                        setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev))
+                      }
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      color="primary"
+                      onPress={() => {
+                        handleSubmit();
+                        onClose();
+                      }}
+                    >
+                      Submit
                     </Button>
                   </div>
                 )}
