@@ -11,7 +11,7 @@ import {
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
 import Layout from "../_layout";
-import { Avatar, Chip, Divider } from "@nextui-org/react";
+import { Avatar, Chip, Divider, Progress } from "@nextui-org/react";
 import { useState } from "react";
 import React from "react";
 import { CheckIcon } from "@radix-ui/react-icons";
@@ -22,7 +22,9 @@ const Room = ({ room }: { room: roomData }) => {
   const [selectedSocieties, setSelectedSocieties] = useState<roomSocieties[]>(
     [],
   );
+
   const [data, setData] = useState(room);
+  const progress = api.progress.roomStatus.useQuery({ roomId: room.info.id });
 
   if (router.isFallback || session.status === "loading") {
     return <div>Loading...</div>;
@@ -81,9 +83,28 @@ const Room = ({ room }: { room: roomData }) => {
       <h1 className="w-full pt-6 text-center text-3xl font-bold">
         {room.info.name} Room
       </h1>
-      <Divider />
       <div className="space-y-2 p-4">
-        <p className="text-lg">Filter by Societies</p>
+        <div className="flex flex-row justify-between">
+          <p className="text-medium font-bold">Progress</p>
+          <p className="text-medium">
+            {progress.data?.completedPoints} / {progress.data?.totalTasksPoints}{" "}
+            pts
+          </p>
+        </div>
+        <Progress
+          size="md"
+          isIndeterminate={progress.isLoading || progress.isError}
+          value={progress.data?.completedPoints ?? 0}
+          maxValue={progress.data?.totalTasksPoints ?? 10}
+          color="warning"
+        />
+        <p className="text-sm text-foreground/60">
+          Completed {progress.data?.completedTasks} out of{" "}
+          {progress.data?.totalTasks} Tasks
+        </p>
+      </div>
+      <div className="space-y-2 p-4">
+        <p className="text-medium font-bold">Filter Societies</p>
         <div className="space-x-2">
           {selectedSocieties.map((soc, idx) => (
             <Chip
@@ -127,7 +148,6 @@ const Room = ({ room }: { room: roomData }) => {
             ))}
         </div>
       </div>
-      <Divider />
       <div className="space-y-8 px-4 py-8">
         {data.incompleteTasks.map((task, idx) => (
           <React.Fragment key={idx}>

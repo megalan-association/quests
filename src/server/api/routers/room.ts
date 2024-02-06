@@ -116,6 +116,7 @@ export const getRoomData = async (roomId: number, userId: number) => {
           image: true,
         },
       },
+      id: true,
       image: true,
       name: true,
     },
@@ -186,7 +187,7 @@ export const getRoomData = async (roomId: number, userId: number) => {
   });
 
   return {
-    info: { name: room.name, image: room.image },
+    info: { id: room.id, name: room.name, image: room.image },
     societies: room.societies,
     completedTasks,
     incompleteTasks,
@@ -194,7 +195,7 @@ export const getRoomData = async (roomId: number, userId: number) => {
 };
 
 export type roomData = {
-  info: { name: string; image: string | null };
+  info: { id: number; name: string; image: string | null };
   societies: roomSocieties[];
   completedTasks: roomTask[];
   incompleteTasks: roomTask[];
