@@ -90,7 +90,7 @@ const Header: React.FC<Props> = ({ session }) => {
             </Button>
           )}
         </NavbarItem>
-        <NavbarItem>
+        <NavbarItem className="flex lg:hidden">
           {session ? (
             <Avatar
               alt="pfp"
