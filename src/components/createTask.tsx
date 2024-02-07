@@ -47,10 +47,10 @@ export default function CreateTask({ handleChange }: Props) {
 
   const [isCollab, setIsCollab] = React.useState(false);
   // "society1, society2"
-  const [collabKeys, setCollabKeys] = React.useState(new Set<string>([]));
+  const [collabSocs, setCollabSocs] = React.useState(new Set<string>([]));
   const displayCollabKeys = React.useMemo(
-    () => Array.from(collabKeys).join(", ").replaceAll("_", " "),
-    [collabKeys],
+    () => Array.from(collabSocs).join(", ").replaceAll("_", " "),
+    [collabSocs],
   );
 
   const taskMutation = api.task.create.useMutation();
@@ -78,8 +78,8 @@ export default function CreateTask({ handleChange }: Props) {
   const handleSubmit = () => {
     let societyNames = [task.main];
 
-    if (collabKeys.size > 0) {
-      const collabNames = Array.from(collabKeys);
+    if (collabSocs.size > 0) {
+      const collabNames = Array.from(collabSocs);
       societyNames.concat(collabNames);
     }
 
@@ -198,7 +198,7 @@ export default function CreateTask({ handleChange }: Props) {
                           selectionMode="multiple"
                           selectedKeys={displayCollabKeys}
                           // @ts-expect-error
-                          onChange={setCollabKeys}
+                          onChange={setCollabSocs}
                         >
                           {allSocieties
                             .filter((society) => society.name != task.main)
