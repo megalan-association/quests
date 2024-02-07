@@ -19,11 +19,13 @@ import {
   RadioGroup,
   Avatar,
 } from "@nextui-org/react";
-
+import type { Societies } from "~/pages/admin/manage-tasks";
 import DefaultImage from "../../public/default.png";
 
 type Props = {
   handleChange: () => void;
+  joinedSocieties: Societies[];
+  allSocieties: Societies[];
 };
 
 // Collab is tracked on its own due to complicated data structure with nextui...
@@ -38,15 +40,22 @@ const defaultTask = {
 
 const pointValues = [100, 200, 300, 400, 500];
 
-export default function CreateTask({ handleChange }: Props) {
-  const total = 4;
+export default function CreateTask({ handleChange, joinedSocieties, allSocieties }: Props) {
+  if (
+    !joinedSocieties ||
+    !allSocieties
+  ) {
+    return <>Loading...</>;
+  }
 
+  const total = 4;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
-  const [task, setTask] = useState(defaultTask);
+  const [task, setTask] = useState({...defaultTask, main: joinedSocieties[0]!.name});
 
   const [isCollab, setIsCollab] = React.useState(false);
-  // "society1, society2"
+  // Format is stored in "society1, society2"
+  // This makes sure the initial selection of a collaboration society cannot be the main society selection
   const [collabSocs, setCollabSocs] = React.useState(new Set<string>([]));
   const displayCollabKeys = React.useMemo(
     () => Array.from(collabSocs).join(", ").replaceAll("_", " "),
@@ -54,26 +63,8 @@ export default function CreateTask({ handleChange }: Props) {
   );
 
   const taskMutation = api.task.create.useMutation();
-  const joinedSocietiesArgs = api.admin.getAdminSocietyList.useQuery(
-    undefined,
-    { retry: false, refetchOnWindowFocus: false },
-  );
-  const allSocietiesArgs = api.admin.getAllSocieties.useQuery(undefined, {
-    retry: false,
-    refetchOnWindowFocus: true,
-  });
 
-  const joinedSocieties = joinedSocietiesArgs.data?.societies;
-  const allSocieties = allSocietiesArgs.data;
-
-  if (
-    joinedSocietiesArgs.isError ||
-    !joinedSocieties ||
-    allSocietiesArgs.isError ||
-    !allSocieties
-  ) {
-    return <>Loading...</>;
-  }
+  
 
   const handleSubmit = () => {
     let societyNames = [task.main];

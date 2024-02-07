@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { db } from "~/server/db";
 
 import {
   adminProcedure,
@@ -98,3 +99,28 @@ export const AdminRouter = createTRPCRouter({
     });
   }),
 });
+
+export const getAdminSocietyList = async (userId: number) => {
+  return db.user.findFirst({
+    where: { id: userId },
+    select: {
+      societies: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
+  });
+};
+
+export const getAllSocieties = async () => {
+  return db.society.findMany({
+    select: {
+      id: true,
+      name: true,
+      image: true,
+    }
+  });
+}
