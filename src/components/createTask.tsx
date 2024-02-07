@@ -28,16 +28,6 @@ type Props = {
   allSocieties: Societies[];
 };
 
-// Collab is tracked on its own due to complicated data structure with nextui...
-// We also have string values because of the weird way Select works with displaying values
-const defaultTask = {
-  main: "",
-  name: "",
-  desc: "",
-  points: "100",
-  activated: true,
-};
-
 const pointValues = [100, 200, 300, 400, 500];
 
 export default function CreateTask({ handleChange, joinedSocieties, allSocieties }: Props) {
@@ -48,10 +38,20 @@ export default function CreateTask({ handleChange, joinedSocieties, allSocieties
     return <>Loading...</>;
   }
 
+  // Collab is tracked on its own due to complicated data structure with nextui...
+  // We also have string values because of the weird way Select works with displaying values
+  const defaultTask = {
+    main: joinedSocieties[0]!.name,
+    name: "",
+    desc: "",
+    points: "100",
+    activated: true,
+  };
+
   const total = 4;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(0);
-  const [task, setTask] = useState({...defaultTask, main: joinedSocieties[0]!.name});
+  const [task, setTask] = useState(defaultTask);
 
   const [isCollab, setIsCollab] = React.useState(false);
   // Format is stored in "society1, society2"
@@ -155,6 +155,7 @@ export default function CreateTask({ handleChange, joinedSocieties, allSocieties
                         itemType="string"
                         selectionMode="single"
                         selectedKeys={[task.main]}
+                        disallowEmptySelection={true}
                         onSelectionChange={(key) =>
                           setTask({
                             ...task,
