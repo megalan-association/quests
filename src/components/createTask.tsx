@@ -17,7 +17,10 @@ import {
   Textarea,
   Radio,
   RadioGroup,
+  Avatar,
 } from "@nextui-org/react";
+
+import DefaultImage from "../../public/default.png";
 
 type Props = {
   handleChange: () => void;
@@ -169,8 +172,12 @@ export default function CreateTask({ handleChange }: Props) {
                         }
                       >
                         {joinedSocieties.map((society) => (
-                          <SelectItem key={society.name} value={society.name}>
-                            {society.name}
+                          <SelectItem key={society.name} value={society.name} textValue={society.name}>
+                            <div className="flex flex-row space-x-4 items-center">
+                              <Avatar src={society.image ? society.image : DefaultImage.src} />
+                              <p>{society.name}</p>
+                            </div>
+                            
                           </SelectItem>
                         ))}
                       </Select>
@@ -199,8 +206,12 @@ export default function CreateTask({ handleChange }: Props) {
                               <SelectItem
                                 key={society.name}
                                 value={society.name}
+                                textValue={society.name}
                               >
-                                {society.name}
+                                <div className="flex flex-row space-x-4 items-center">
+                                  <Avatar src={society.image ? society.image : DefaultImage.src} />
+                                  <p>{society.name}</p>
+                                </div>
                               </SelectItem>
                             ))}
                         </Select>
