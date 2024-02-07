@@ -14,8 +14,9 @@ import Layout from "../_layout";
 import { Avatar, Chip, Divider, Progress } from "@nextui-org/react";
 import { useState } from "react";
 import React from "react";
-import { CheckIcon } from "@radix-ui/react-icons";
+import { CheckCircledIcon, CheckIcon } from "@radix-ui/react-icons";
 import CompleteTaskModal from "~/components/CompleteTaskModal";
+import * as Toast from "@radix-ui/react-toast";
 
 const Room = ({ room }: { room: roomData }) => {
   const router = useRouter();
@@ -25,10 +26,14 @@ const Room = ({ room }: { room: roomData }) => {
   );
   const [data, setData] = useState(room);
   const [showModal, setShowModal] = useState(false);
+  const [showConfirmationToast, setShowConfirmationToast] = useState(false);
   const [selectedTask, setSelectedTask] = useState(-1);
   const util = api.useUtils();
 
-  const progress = api.progress.roomStatus.useQuery({ roomId: room.info.id });
+  const progress = api.progress.roomStatus.useQuery(
+    { roomId: room.info.id },
+    { keepPreviousData: true, refetchOnWindowFocus: false },
+  );
 
   if (router.isFallback || session.status === "loading") {
     return <div>Loading...</div>;
@@ -82,20 +87,34 @@ const Room = ({ room }: { room: roomData }) => {
     setData({ ...room, completedTasks, incompleteTasks });
   };
 
-  const handleModalClose = () => {
+  const handleModalClose = (success: boolean) => {
     // fetch latest room data incase user completed task after closing modal
     util.room.getRoomData
       .fetch({ roomId: room.info.id })
       .then((updatedData) => setData({ ...updatedData }));
 
     setShowModal(false);
+    if (success) setTimeout(() => setShowConfirmationToast(true), 500);
   };
 
   return (
     <>
+      <Toast.Provider swipeDirection="right">
+        <Toast.Root
+          open={showConfirmationToast}
+          onOpenChange={setShowConfirmationToast}
+          className="ToastRoot"
+        >
+          <Toast.Title className="flex flex-row items-center space-x-2 font-semibold text-foreground">
+            <CheckCircledIcon className="h-6 w-6 text-green-500" />
+            <h1>Successfully Completed Task</h1>
+          </Toast.Title>
+        </Toast.Root>
+        <Toast.Viewport className="ToastViewport" />
+      </Toast.Provider>
       <CompleteTaskModal
         isOpen={showModal}
-        handleClose={handleModalClose}
+        handleClose={(success) => handleModalClose(success)}
         taskId={selectedTask}
         userId={session.data.user.id}
       />

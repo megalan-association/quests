@@ -1,22 +1,8 @@
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  Select,
-  SelectItem,
-  Skeleton,
-} from "@nextui-org/react";
 import Layout from "../_layout";
 import QrScanner from "qr-scanner";
 import { useEffect, useRef, useState } from "react";
-import Scanner from "~/components/Scanner";
 import * as Toast from "@radix-ui/react-toast";
-import {
-  CameraIcon,
-  CheckCircledIcon,
-  CrossCircledIcon,
-} from "@radix-ui/react-icons";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { api } from "~/utils/api";
 
 const ScanQRCode = () => {
@@ -68,12 +54,6 @@ const ScanQRCode = () => {
 
   return (
     <Layout>
-      <h1 className="w-full px-4 pt-6 text-center text-3xl font-bold">
-        Scan QR Codes
-      </h1>
-      <p className="w-full text-center text-foreground/60">
-        Give the Scanner a Moment to Start
-      </p>
       <Toast.Provider swipeDirection="right">
         <Toast.Root
           open={scanned}
@@ -87,6 +67,12 @@ const ScanQRCode = () => {
         </Toast.Root>
         <Toast.Viewport className="ToastViewport" />
       </Toast.Provider>
+      <h1 className="w-full px-4 pt-6 text-center text-3xl font-bold">
+        Scan QR Codes
+      </h1>
+      <p className="w-full text-center text-foreground/60">
+        Give the Scanner a Moment to Start
+      </p>
       <video
         ref={videoRef}
         className="aspect-square overflow-hidden rounded-lg object-cover p-4"
