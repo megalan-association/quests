@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import * as Toast from "@radix-ui/react-toast";
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { api } from "~/utils/api";
-import { Button } from "@nextui-org/react";
 
 const ScanQRCode = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -30,41 +29,31 @@ const ScanQRCode = () => {
     }
   };
 
-  const restartScanner = () => {
-    if (videoRef.current) {
-      scanner = new QrScanner(
-        videoRef.current,
-        (result) => {
-          handleScan(result.data);
-        },
-        { maxScansPerSecond: 0.5, highlightScanRegion: true },
-      );
-      scanner.setCamera("environment");
-    }
-  };
-
   useEffect(() => {
-    QrScanner.listCameras(true);
+    const initializeScanner = async () => {
+      QrScanner.listCameras(true);
 
-    if (videoRef.current) {
-      scanner = new QrScanner(
-        videoRef.current,
-        (result) => {
-          handleScan(result.data);
-        },
-        { maxScansPerSecond: 0.5, highlightScanRegion: true },
-      );
-      scanner.setCamera("environment");
+      if (videoRef.current) {
+        scanner = new QrScanner(
+          videoRef.current,
+          (result) => {
+            handleScan(result.data);
+          },
+          { maxScansPerSecond: 0.5, highlightScanRegion: true },
+        );
+        scanner.setCamera("environment");
 
-      scanner.start();
+        scanner.start();
 
-      return () => {
-        if (scanner) {
-          scanner.stop();
-        }
-      };
-    }
-  }, [restartScanner]);
+        return () => {
+          if (scanner) {
+            scanner.stop();
+          }
+        };
+      }
+    };
+    setTimeout(() => initializeScanner(), 1000);
+  }, []);
 
   return (
     <Layout>
@@ -91,10 +80,6 @@ const ScanQRCode = () => {
         ref={videoRef}
         className="aspect-square overflow-hidden rounded-lg object-cover p-4"
       />
-      <p className="w-full text-center text-foreground/60">
-        Restart Camera if it has not loaded yet
-      </p>
-      <Button onClick={restartScanner}>Restart</Button>
     </Layout>
   );
 };
