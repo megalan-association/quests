@@ -30,11 +30,12 @@ type Props = {
 
 const pointValues = [100, 200, 300, 400, 500];
 
-export default function CreateTask({ handleChange, joinedSocieties, allSocieties }: Props) {
-  if (
-    !joinedSocieties ||
-    !allSocieties
-  ) {
+export default function CreateTask({
+  handleChange,
+  joinedSocieties,
+  allSocieties,
+}: Props) {
+  if (!joinedSocieties || !allSocieties) {
     return <>Loading...</>;
   }
 
@@ -63,8 +64,6 @@ export default function CreateTask({ handleChange, joinedSocieties, allSocieties
   );
 
   const taskMutation = api.task.create.useMutation();
-
-  
 
   const handleSubmit = () => {
     let societyNames = [task.main];
@@ -164,12 +163,21 @@ export default function CreateTask({ handleChange, joinedSocieties, allSocieties
                         }
                       >
                         {joinedSocieties.map((society) => (
-                          <SelectItem key={society.name} value={society.name} textValue={society.name}>
-                            <div className="flex flex-row space-x-4 items-center">
-                              <Avatar src={society.image ? society.image : DefaultImage.src} />
+                          <SelectItem
+                            key={society.name}
+                            value={society.name}
+                            textValue={society.name}
+                          >
+                            <div className="flex flex-row items-center space-x-4">
+                              <Avatar
+                                src={
+                                  society.image
+                                    ? society.image
+                                    : DefaultImage.src
+                                }
+                              />
                               <p>{society.name}</p>
                             </div>
-                            
                           </SelectItem>
                         ))}
                       </Select>
@@ -200,8 +208,14 @@ export default function CreateTask({ handleChange, joinedSocieties, allSocieties
                                 value={society.name}
                                 textValue={society.name}
                               >
-                                <div className="flex flex-row space-x-4 items-center">
-                                  <Avatar src={society.image ? society.image : DefaultImage.src} />
+                                <div className="flex flex-row items-center space-x-4">
+                                  <Avatar
+                                    src={
+                                      society.image
+                                        ? society.image
+                                        : DefaultImage.src
+                                    }
+                                  />
                                   <p>{society.name}</p>
                                 </div>
                               </SelectItem>

@@ -6,15 +6,24 @@ import CreateTask from "~/components/createTask";
 import { getServerAuthSession } from "~/server/auth";
 import { GetServerSideProps } from "next";
 
-import { getAdminSocietyList, getAllSocieties, } from "~/server/api/routers/admin";
+import {
+  getAdminSocietyList,
+  getAllSocieties,
+} from "~/server/api/routers/admin";
 
 export type Societies = {
   id: number;
   name: string;
   image: string | null;
-}
+};
 
-export default function ManageTasks({ joinedSocieties, allSocieties } : {joinedSocieties: Societies[], allSocieties: Societies[]}) {
+export default function ManageTasks({
+  joinedSocieties,
+  allSocieties,
+}: {
+  joinedSocieties: Societies[];
+  allSocieties: Societies[];
+}) {
   const { data: session, update: update } = useSession({ required: true });
 
   if (!session) {
@@ -33,7 +42,11 @@ export default function ManageTasks({ joinedSocieties, allSocieties } : {joinedS
   return (
     <Layout>
       <main className="flex flex-col items-center">
-        <CreateTask handleChange={handleChange} joinedSocieties={joinedSocieties} allSocieties={allSocieties}/>
+        <CreateTask
+          handleChange={handleChange}
+          joinedSocieties={joinedSocieties}
+          allSocieties={allSocieties}
+        />
       </main>
     </Layout>
   );
@@ -64,6 +77,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 
   return {
-    props: {joinedSocieties: joinedSocieties.societies, allSocieties: allSocieties}
-  }
+    props: {
+      joinedSocieties: joinedSocieties.societies,
+      allSocieties: allSocieties,
+    },
+  };
 };
