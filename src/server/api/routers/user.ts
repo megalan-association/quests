@@ -29,4 +29,19 @@ export const UserRouter = createTRPCRouter({
         },
       });
     }),
+
+  isTaskComplete: protectedProcedure
+    .input(z.object({ taskId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const task = await ctx.db.task.findFirst({
+        where: {
+          id: input.taskId,
+          completedUsers: {
+            some: { id: ctx.session.user.id },
+          },
+        },
+      });
+
+      return task !== null;
+    }),
 });

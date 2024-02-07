@@ -13,7 +13,7 @@ import { api } from "~/utils/api";
 
 type Props = {
   isOpen: boolean;
-  handleClose: () => void;
+  handleClose: (success: boolean) => void;
   taskId: number;
   userId: number;
 };
@@ -25,12 +25,26 @@ const CompleteTaskModal: React.FC<Props> = ({
   handleClose,
 }) => {
   const { Canvas } = useQRCode();
+  const isTaskComplete = api.user.isTaskComplete.useQuery(
+    { taskId },
+    {
+      enabled: isOpen,
+      refetchInterval: 2000,
+      keepPreviousData: true,
+    },
+  );
+
+  useEffect(() => {
+    if (isTaskComplete.data) {
+      handleClose(true);
+    }
+  }, [isTaskComplete.data]);
 
   return (
     <Modal
       isOpen={isOpen}
       backdrop="blur"
-      onClose={handleClose}
+      onClose={() => handleClose(false)}
       placement="center"
     >
       <ModalContent>
@@ -60,7 +74,7 @@ const CompleteTaskModal: React.FC<Props> = ({
             size="md"
             variant="flat"
             color="primary"
-            onClick={handleClose}
+            onClick={() => handleClose(false)}
           >
             Close
           </Button>
