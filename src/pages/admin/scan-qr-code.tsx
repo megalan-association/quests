@@ -7,9 +7,11 @@ import { api } from "~/utils/api";
 
 const ScanQRCode = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const [scanner, setScanner] = useState<QrScanner | null>(null);
   const [scanned, setScanned] = useState(false);
 
-  let scanner: QrScanner | null = null;
   const completeTaskMutation = api.task.complete.useMutation();
 
   const handleScan = async (result: string) => {
@@ -30,26 +32,31 @@ const ScanQRCode = () => {
   };
 
   useEffect(() => {
-    QrScanner.listCameras(true);
+    const initScanner = async () => {
+      if (videoRef.current && videoContainerRef.current) {
+        const scannerInstance = new QrScanner(
+          videoRef.current,
+          (result) => handleScan(result.data),
+          {
+            preferredCamera: "environment",
+            maxScansPerSecond: 0.5,
+            highlightScanRegion: true,
+          },
+        );
 
-    if (videoRef.current) {
-      scanner = new QrScanner(
-        videoRef.current,
-        (result) => {
-          handleScan(result.data);
-        },
-        { maxScansPerSecond: 0.75, highlightScanRegion: true },
-      );
-      scanner.setCamera("environment");
+        await scannerInstance.start();
 
-      scanner.start();
+        setScanner(scannerInstance);
+      }
+    };
 
-      return () => {
-        if (scanner) {
-          scanner.stop();
-        }
-      };
-    }
+    initScanner();
+
+    return () => {
+      if (scanner) {
+        scanner.stop();
+      }
+    };
   }, []);
 
   return (
@@ -73,10 +80,12 @@ const ScanQRCode = () => {
       <p className="w-full text-center text-foreground/60">
         Give the Scanner a Moment to Start
       </p>
-      <video
-        ref={videoRef}
-        className="aspect-square overflow-hidden rounded-lg object-cover p-4"
-      />
+      <div ref={videoContainerRef} className="">
+        <video
+          ref={videoRef}
+          className="aspect-square overflow-hidden rounded-lg object-cover p-4"
+        />
+      </div>
     </Layout>
   );
 };
