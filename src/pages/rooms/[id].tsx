@@ -202,6 +202,7 @@ const Room = ({ room }: { room: roomData }) => {
                   setSelectedTask(id);
                   setShowModal(true);
                 }}
+                isAdmin={false}
               />
             </React.Fragment>
           ))}
@@ -219,6 +220,7 @@ const Room = ({ room }: { room: roomData }) => {
                   showComplete
                   isCompleted={true}
                   handleShowModal={(id) => {}}
+                  isAdmin={false}
                 />
               ))}
             </div>
