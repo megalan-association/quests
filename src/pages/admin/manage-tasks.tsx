@@ -1,4 +1,3 @@
-import { $Enums } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import UnAuthorized from "~/components/unauthorized";
 import Layout from "../_layout";
@@ -13,23 +12,16 @@ import {
 import { api } from "~/utils/api";
 import TaskCard from "~/components/TaskCard";
 import EditTask from "~/components/editTask";
-import { useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
 import { roomTask } from "~/server/api/routers/room";
-import CompleteTaskModal from "~/components/CompleteTaskModal";
-
-export type Societies = {
-  id: number;
-  name: string;
-  image: string | null;
-};
+import type { Society } from "~/server/api/routers/admin";
 
 export default function ManageTasks({
   joinedSocieties,
   allSocieties,
 }: {
-  joinedSocieties: Societies[];
-  allSocieties: Societies[];
+  joinedSocieties: Society[];
+  allSocieties: Society[];
 }) {
   const { data: session, update: update } = useSession({ required: true });
 
@@ -77,6 +69,7 @@ export default function ManageTasks({
 
   const handleClose = () => {
     setShowEdit(false);
+    handleChange();
   }
 
   const handleActivate = (id: number, status: boolean) => {

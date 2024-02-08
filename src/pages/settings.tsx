@@ -4,18 +4,30 @@ import { useSession } from "next-auth/react";
 import ChangeName from "~/components/changeName";
 import Layout from "~/pages/_layout";
 import ProfileCard from "~/components/ProfileCard";
+import { GetServerSideProps } from "next";
+import { getServerAuthSession } from "~/server/auth";
+import { Society, getAdminSocietyList } from "~/server/api/routers/admin";
+import { useRouter } from "next/router";
 
-const Settings = () => {
+const Settings = ({
+  joinedSocieties,
+}: {
+  joinedSocieties: Society[] | undefined;
+}) => {
   const { data: session, update: update } = useSession({ required: true });
+  const router = useRouter();
 
   if (!session) {
     return <>Loading...</>;
   }
 
+  console.log(joinedSocieties);
+
   const handleChange = async () => {
     // give it half a second for the db to update when the user updates anything
     setTimeout(() => {
       update();
+      router.replace(router.asPath);
     }, 500);
   };
 
@@ -36,6 +48,7 @@ const Settings = () => {
           <LeaveSociety
             isAuthorized={session?.user.type === "ADMIN"}
             handleChange={handleChange}
+            joinedSocieties={joinedSocieties}
           />
         </div>
       </main>
@@ -45,9 +58,9 @@ const Settings = () => {
 
 export default Settings;
 
-/**
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerAuthSession(ctx);
+
   if (!session) {
     return {
       redirect: {
@@ -57,8 +70,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+  const joinedSocieties = await getAdminSocietyList(session.user.id);
+
   return {
-    props: { session },
+    props: {
+      joinedSocieties: joinedSocieties?.societies,
+    },
   };
 };
-*/

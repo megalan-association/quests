@@ -15,19 +15,15 @@ import {
   ListboxItem,
 } from "@nextui-org/react";
 import DefaultIcon from "../../public/default.png";
-
-type Society = {
-  name: string;
-  id: number;
-  image: string | null;
-};
+import { Society } from "~/server/api/routers/admin";
 
 type Props = {
   isAuthorized: boolean;
   handleChange: () => void;
+  joinedSocieties: Society[] | undefined;
 };
 
-export default function LeaveSociety({ isAuthorized, handleChange }: Props) {
+export default function LeaveSociety({ isAuthorized, handleChange, joinedSocieties }: Props) {
   const total = 2;
   const headerStep1 = "Choose a society from the list below to leave.";
   const headerStep2 = "Are you sure you want to leave this society?";
@@ -36,22 +32,11 @@ export default function LeaveSociety({ isAuthorized, handleChange }: Props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [chosenSociety, setChosenSociety] = useState<Society>();
 
-  const societyListArgs = api.admin.getAdminSocietyList.useQuery(undefined, {
-    enabled: isAuthorized,
-    retry: false,
-    refetchInterval: 15000,
-    refetchIntervalInBackground: false,
-    refetchOnWindowFocus: false,
-  });
   const leaveSocietyMutation = api.admin.leaveSociety.useMutation();
 
-  if (!isAuthorized) {
+  if (!isAuthorized || !joinedSocieties) {
     return <></>;
   }
-
-  const societyList = societyListArgs.data
-    ? societyListArgs.data.societies
-    : [];
 
   const handleSubmit = () => {
     if (chosenSociety) {
@@ -65,7 +50,7 @@ export default function LeaveSociety({ isAuthorized, handleChange }: Props) {
 
   const handleSelect = (id: React.Key) => {
     // Because we are preselecting, find should not return undefined...
-    setChosenSociety(societyList?.find((society) => society.id == id));
+    setChosenSociety(joinedSocieties?.find((society) => society.id == id));
     setCurrentStep((prev) => (prev < total - 1 ? prev + 1 : prev));
   };
 
@@ -101,10 +86,10 @@ export default function LeaveSociety({ isAuthorized, handleChange }: Props) {
                   className="max-w-sm py-2"
                 />
                 <div className="w-full overflow-y-scroll">
-                  {currentStep === 0 && societyList && (
+                  {currentStep === 0 && joinedSocieties && (
                     <div className="flex h-fit max-w-sm rounded-small border-small border-default-200 px-1 py-2 dark:border-default-100">
                       <Listbox
-                        items={societyList}
+                        items={joinedSocieties}
                         label="Society List"
                         onAction={(key: React.Key) => handleSelect(key)}
                         variant="flat"
