@@ -104,6 +104,10 @@ export const RoomRouter = createTRPCRouter({
     }),
 });
 
+export const ssrGetRoomList = async () => {
+  return await db.room.findMany();
+}
+
 // turned this into a function for Server Side Rendering
 export const getRoomData = async (roomId: number, userId: number) => {
   // .input(z.object({ roomId: z.number().min(1) }))
