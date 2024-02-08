@@ -7,6 +7,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { roomTask } from "./room";
 
 export const AdminRouter = createTRPCRouter({
   joinSociety: protectedProcedure
@@ -96,6 +97,48 @@ export const AdminRouter = createTRPCRouter({
           },
         },
       },
+    });
+  }),
+
+  getAllTask: adminProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findFirstOrThrow({
+      where: { id: ctx.session.user.id },
+      select: {
+        societies: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    return ctx.db.task.findMany({
+      where: {
+        societies: {
+          some: {
+            id: {
+              in: user.societies.map((s) => s.id),
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        activated: true,
+        description: true,
+        name: true,
+        points: true,
+        societies: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+      distinct: ["id"],
     });
   }),
 });

@@ -6,6 +6,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Checkbox,
   Chip,
   Divider,
   Modal,
@@ -20,6 +21,7 @@ type Props = {
   showComplete?: boolean;
   isCompleted?: boolean;
   handleShowModal: (id: number) => void;
+  handleActivate: (status: boolean) => void;
   isAdmin: boolean;
 };
 
@@ -28,6 +30,7 @@ const TaskCard: React.FC<Props> = ({
   isCompleted,
   showComplete,
   handleShowModal,
+  handleActivate,
   isAdmin,
 }) => {
   return (
@@ -69,6 +72,19 @@ const TaskCard: React.FC<Props> = ({
             <Chip radius="sm" variant="flat" color="warning">
               {data.points} pts
             </Chip>
+            <div className="flex flex-row space-x-2 px-2">
+              <Checkbox
+                defaultSelected={data.activated}
+                onValueChange={handleActivate}
+                color="success"
+                classNames={{
+                  base: "bg-default/40 rounded-xl",
+                  label: "pr-2 text-sm text-foreground/80",
+                }}
+              >
+                Activate
+              </Checkbox>
+            </div>
             <Button
               size="md"
               variant="flat"
@@ -76,7 +92,7 @@ const TaskCard: React.FC<Props> = ({
               onClick={() => handleShowModal(data.id)}
               startContent={<Pencil2Icon />}
             >
-              Edit Task
+              Edit
             </Button>
           </CardFooter>
         </>
