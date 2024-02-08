@@ -33,7 +33,6 @@ export const TaskRouter = createTRPCRouter({
         description: z.string().min(0).default(""),
         activated: z.boolean().default(false),
         points: z.number().default(100),
-        societies: z.array(z.object({ id: z.string().min(1) })).min(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {
