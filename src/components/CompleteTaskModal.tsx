@@ -45,7 +45,7 @@ const CompleteTaskModal: React.FC<Props> = ({
       isOpen={isOpen}
       backdrop="blur"
       onClose={() => handleClose(false)}
-      placement="center"
+      placement="top"
     >
       <ModalContent>
         <ModalHeader>
