@@ -21,7 +21,7 @@ type Props = {
   showComplete?: boolean;
   isCompleted?: boolean;
   handleShowModal: (id: number) => void;
-  handleActivate: (status: boolean) => void;
+  handleActivate: (id: number, status: boolean) => void;
   isAdmin: boolean;
 };
 
@@ -33,6 +33,11 @@ const TaskCard: React.FC<Props> = ({
   handleActivate,
   isAdmin,
 }) => {
+
+  const handleActivateClick = (status: boolean) => {
+    handleActivate(data.id, status);
+  }
+
   return (
     <Card>
       <CardHeader className="space-x-4">
@@ -75,7 +80,7 @@ const TaskCard: React.FC<Props> = ({
             <div className="flex flex-row space-x-2 px-2">
               <Checkbox
                 defaultSelected={data.activated}
-                onValueChange={handleActivate}
+                onValueChange={handleActivateClick}
                 color="success"
                 classNames={{
                   base: "bg-default/40 rounded-xl",
