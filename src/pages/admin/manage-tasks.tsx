@@ -16,6 +16,7 @@ import EditTask from "~/components/editTask";
 import { useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
 import { roomTask } from "~/server/api/routers/room";
+import CompleteTaskModal from "~/components/CompleteTaskModal";
 
 export type Societies = {
   id: number;
@@ -37,9 +38,20 @@ export default function ManageTasks({
     refetchIntervalInBackground: false,
   });
 
+  const activateMutation = api.task.activate.useMutation();
+  const deactivateMutation = api.task.deactivate.useMutation();
+
   const [showEdit, setShowEdit] = useState(false);
+  const initTask: roomTask = {
+    id: -1,
+    description: "",
+    name: "",
+    points: 100,
+    societies: [],
+    activated: false
+  }
   
-  const [selectedTask, setSelectedTask] = useState<roomTask | undefined>();
+  const [selectedTask, setSelectedTask] = useState<roomTask>(initTask);
 
   if (!session) {
     return <>Loading...</>;
@@ -48,7 +60,6 @@ export default function ManageTasks({
   }
 
   const handleShowEdit = (id: number) => {
-    console.log(id);
     // get old task data from all tasks
     // setshow modal
     
@@ -66,11 +77,11 @@ export default function ManageTasks({
 
   const handleClose = () => {
     setShowEdit(false);
-    setSelectedTask(undefined);
   }
 
   const handleActivate = (id: number, status: boolean) => {
-    console.log(id);
+    console.log(status)
+    status ? activateMutation.mutate({id: id}) : deactivateMutation.mutate({id: id});
   };
 
   const handleChange = async () => {
@@ -82,28 +93,30 @@ export default function ManageTasks({
 
   return (
     <>
-
-    <Layout>
-      <main className="flex flex-col items-center">
-        {selectedTask && <EditTask oldTask={selectedTask} handleClose={handleClose} isOpen={showEdit} />}
-        <CreateTask
+      <EditTask oldTask={selectedTask} handleClose={handleClose} isOpen={selectedTask && showEdit} />
+      <Layout>
+        <main className="flex flex-col items-center">
+        <h1 className="pt-6 pb-10 text-3xl font-bold w-full text-center">Manage Tasks</h1>
+        <div className="flex flex-row w-full justify-end px-4">
+          <CreateTask
           handleChange={handleChange}
           joinedSocieties={joinedSocieties}
           allSocieties={allSocieties}
-        />
-        <div className="p-4 space-y-4">
-          {tasks.data?.map((task) => (
-            <TaskCard
-              key={task.id}
-              data={task}
-              handleShowModal={(id) => handleShowEdit(id)}
-              handleActivate={(id, status) => handleActivate(id, status)}
-              isAdmin={session.user.type === "ADMIN"}
-            />
-          ))}
+          />
         </div>
-      </main>
-    </Layout>
+          <div className="p-4 space-y-4">
+            {tasks.data?.map((task) => (
+              <TaskCard
+                key={task.id}
+                data={task}
+                handleShowModal={(id) => handleShowEdit(id)}
+                handleActivate={(id, status) => handleActivate(id, status)}
+                isAdmin={session.user.type === "ADMIN"}
+              />
+            ))}
+          </div>
+        </main>
+      </Layout>
     </>
   );
 }

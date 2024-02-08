@@ -21,6 +21,7 @@ import {
 } from "@nextui-org/react";
 import type { Societies } from "~/pages/admin/manage-tasks";
 import DefaultImage from "../../public/default.png";
+import { PlusIcon } from "@radix-ui/react-icons";
 
 type Props = {
   handleChange: () => void;
@@ -97,9 +98,8 @@ export default function CreateTask({
 
   return (
     <div className="flex flex-col gap-2">
-      <Button onPress={onOpen} className="max-w-fit" color="primary">
-        Create a Task
-      </Button>
+    <Button onPress={onOpen} className="max-w-fit" size="sm" color="primary"  startContent={<PlusIcon />} >Create Task</Button>
+      
       <Modal
         isOpen={isOpen}
         placement="top-center"

@@ -37,10 +37,6 @@ export default function EditTask({ oldTask, handleClose, isOpen }: Props) {
   const editMutation = api.task.edit.useMutation();
 
   const handleSubmit = () => {
-    console.log("editing a task");
-    console.log("old");
-    console.log(oldTask);
-    console.log("new");
     editMutation.mutate({
       id: newTask.id,
       name: newTask.name,
@@ -53,7 +49,7 @@ export default function EditTask({ oldTask, handleClose, isOpen }: Props) {
   };
 
   return (
-    <Modal isOpen={isOpen} placement="top-center" backdrop="blur" onClose={handleClose}>
+    <Modal isOpen={isOpen} placement="top-center" backdrop="blur" onClose={handleClose} >
       <ModalContent className="h-fit">
         <ModalHeader className="flex flex-col items-center">
           <span className="text-3xl font-bold">Edit a Task</span>
