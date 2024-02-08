@@ -203,6 +203,7 @@ const Room = ({ room }: { room: roomData }) => {
                   setShowModal(true);
                 }}
                 isAdmin={false}
+                handleActivate={(status) => {}}
               />
             </React.Fragment>
           ))}
@@ -221,6 +222,7 @@ const Room = ({ room }: { room: roomData }) => {
                   isCompleted={true}
                   handleShowModal={(id) => {}}
                   isAdmin={false}
+                  handleActivate={(status) => {}}
                 />
               ))}
             </div>

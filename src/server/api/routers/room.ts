@@ -215,6 +215,7 @@ export type roomTask = {
   }[];
   description: string;
   points: number;
+  activated?: boolean;
 };
 
 export type roomSocieties = {
