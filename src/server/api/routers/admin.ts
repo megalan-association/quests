@@ -167,3 +167,9 @@ export const getAllSocieties = async () => {
     }
   });
 }
+
+export type Society = {
+  name: string;
+  id: number;
+  image: string | null;
+};

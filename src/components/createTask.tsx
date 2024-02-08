@@ -19,14 +19,14 @@ import {
   RadioGroup,
   Avatar,
 } from "@nextui-org/react";
-import type { Societies } from "~/pages/admin/manage-tasks";
+import type { Society } from "~/server/api/routers/admin";
 import DefaultImage from "../../public/default.png";
 import { PlusIcon } from "@radix-ui/react-icons";
 
 type Props = {
   handleChange: () => void;
-  joinedSocieties: Societies[];
-  allSocieties: Societies[];
+  joinedSocieties: Society[];
+  allSocieties: Society[];
 };
 
 const pointValues = [100, 200, 300, 400, 500];

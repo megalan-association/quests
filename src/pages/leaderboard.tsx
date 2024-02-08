@@ -71,24 +71,32 @@ export default function App() {
             aria-label="Example table with custom cells"
             isHeaderSticky={true}
             isStriped={true}
-            classNames={{wrapper: "p-4 pt-0 shadow-none"}}
+            classNames={{ wrapper: "p-4 pt-0 shadow-none" }}
           >
             <TableHeader
               columns={[
-                { key: "index", label: "Rank"},
+                { key: "index", label: "Rank" },
                 { key: "name", label: "User" },
                 { key: "points", label: "Points" },
               ]}
             >
-              {(column) => (
-                column.key === "index" ? <TableColumn key={column.key}><p className="text-center">{column.label}</p></TableColumn> : <TableColumn key={column.key}>{column.label}</TableColumn>
-              )}
+              {(column) =>
+                column.key === "index" ? (
+                  <TableColumn key={column.key}>
+                    <p className="text-center">{column.label}</p>
+                  </TableColumn>
+                ) : (
+                  <TableColumn key={column.key}>{column.label}</TableColumn>
+                )
+              }
             </TableHeader>
             <TableBody>
               {leaderboard.map((item, index) => (
                 <TableRow key={item.id}>
                   {(columnKey) => (
-                    <TableCell>{renderCell(index + 1, item, columnKey)}</TableCell>
+                    <TableCell>
+                      {renderCell(index + 1, item, columnKey)}
+                    </TableCell>
                   )}
                 </TableRow>
               ))}
