@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next"
 import React from "react"
 import AdminDashboard from "~/components/AdminDashboard"
 import { ssrStatus } from "~/server/api/routers/progress"
-import { roomData, ssrGetRoomList } from "~/server/api/routers/room"
+import { ssrGetRoomList } from "~/server/api/routers/room"
 import { getServerAuthSession } from "~/server/auth"
 import Layout from "./_layout"
 import ParticipantDashboard from "~/components/ParticipantDashboard"
@@ -60,8 +60,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         isAdmin: false,
         participantData: {
           rooms: roomsList,
-          status: userStatus,
-          leaderboard: 
+          status: userStatus
         }
       }
     }
