@@ -18,7 +18,7 @@ export default function Map() {
         {({ resetTransform }) => (
           <React.Fragment>
             <div className="mt-[-2rem]">
-              <div className="absolute flex flex-row justify-start space-x-4 p-4 z-10 align-middle">
+              <div className="absolute z-10 flex flex-row justify-start space-x-4 p-4 align-middle">
                 <Button
                   className="bg-primary-foreground"
                   variant="bordered"
@@ -47,7 +47,7 @@ export default function Map() {
                 </Button>
               </div>
               <TransformComponent>
-                <div className="relative aspect-square z-0 h-[86vh] w-screen">
+                <div className="relative z-0 aspect-square h-[86vh] w-screen">
                   <Image
                     className="object-contain"
                     fill
