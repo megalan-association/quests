@@ -12,23 +12,10 @@ export type RoomInfo = {
   image: string | null
 }
 
-// type StatusInfo = {
-//   completedPoints: number | null,
-//   totalTasksPoints: number | null,
-//   completedTasks: number,
-//   totalTasks: number,
-// };
-
-// export type ParticipantData = {
-//   rooms: RoomInfo[],
-//   status: StatusInfo
-// }
-
 type PropsType = {
   userName: string,
   isAdmin: boolean,
   rooms: RoomInfo[]
-  // participantData: ParticipantData | null
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -49,29 +36,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       rooms: await ssrGetRoomList()
     }
   }
-
-  // if (session.user.type == "ADMIN") {
-  //   return {
-  //     props: {
-  //       userName: session.user.name || "",
-  //       isAdmin: true,
-  //       participantData: null
-  //     }
-  //   }
-  // } else {
-  //   const roomsList = await ssrGetRoomList()
-  //   const userStatus = await ssrStatus(session)
-  //   return {
-  //     props: {
-  //       userName: session.user.name || "",
-  //       isAdmin: false,
-  //       participantData: {
-  //         rooms: roomsList,
-  //         status: userStatus
-  //       }
-  //     }
-  //   }
-  // }
 } 
 
 const Dashboard: React.FC<PropsType> = (props) => {
