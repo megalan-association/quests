@@ -4,10 +4,12 @@ import {
   TransformWrapper,
   TransformComponent,
 } from "react-zoom-pan-pinch";
-import MegaLanMap from "../../public/temptemptmep.jpg";
-import MegaLanMap2 from "../../public/default.png";
+import MegaLanMap from "../../public/map1.png";
+import MegaLanMap2 from "../../public/map2.png";
 import Layout from "./_layout";
 import { Button } from "@nextui-org/react";
+
+const mapNames = ["G Floor", "B Floor"];
 
 export default function Map() {
   const [mapSwitch, setMapSwitch] = useState(true);
@@ -33,7 +35,7 @@ export default function Map() {
                     resetTransform();
                   }}
                 >
-                  Ground Floor
+                  {mapNames[0]}
                 </Button>
                 <Button
                   color="primary"
@@ -42,7 +44,7 @@ export default function Map() {
                     resetTransform();
                   }}
                 >
-                  Floor 1
+                  {mapNames[1]}
                 </Button>
               </div>
               <TransformComponent>
