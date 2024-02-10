@@ -168,8 +168,59 @@ export const getAllSocieties = async () => {
   });
 }
 
+export const getAllTask = async (userId: number) => {
+  const user = await db.user.findFirstOrThrow({
+    where: { id: userId },
+    select: {
+      societies: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
+  });
+
+  return db.task.findMany({
+    where: {
+      societies: {
+        some: {
+          id: {
+            in: user.societies.map((s) => s.id),
+          },
+        },
+      },
+    },
+    select: {
+      id: true,
+      activated: true,
+      description: true,
+      name: true,
+      points: true,
+      societies: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
+    distinct: ["id"],
+  });
+}
+
 export type Society = {
   name: string;
   id: number;
   image: string | null;
 };
+
+export type Task = {
+  name: string;
+  description: string;
+  activated: boolean;
+  points: number;
+  id: number;
+  societies: Society[];
+}
