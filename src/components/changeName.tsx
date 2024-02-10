@@ -47,10 +47,6 @@ export default function ChangeName({ currentName, handleChange }: Props) {
     setCurrentStep(0);
   };
 
-  const handleCancel = () => {
-    setCurrentStep(0);
-  };
-
   return (
     <div className="flex flex-col gap-2">
       <Button onPress={onOpen} className="max-w-fit" color="primary">
@@ -128,7 +124,7 @@ export default function ChangeName({ currentName, handleChange }: Props) {
                     <Button
                       variant="light"
                       color="danger"
-                      onPress={() => handleCancel()}
+                      onPress={() => handleClose()}
                     >
                       Cancel
                     </Button>

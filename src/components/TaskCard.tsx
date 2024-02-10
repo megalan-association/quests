@@ -9,7 +9,6 @@ import {
   Checkbox,
   Chip,
   Divider,
-  Modal,
 } from "@nextui-org/react";
 import { DotFilledIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import { roomTask } from "~/server/api/routers/room";
