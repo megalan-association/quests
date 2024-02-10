@@ -65,9 +65,11 @@ export default function ManageTasks({
     setShowEdit(true);
   };
 
-  const handleChange = async () => {
-    const newTasks = await utils.admin.getAllTask.fetch();
-    setTasks(newTasks);
+  const handleChange = () => {
+    setTimeout(async () => {
+      const newTasks = await utils.admin.getAllTask.fetch();
+      setTasks(newTasks);
+    }, 500);
   };
 
   const handleClose = () => {
@@ -100,7 +102,7 @@ export default function ManageTasks({
               allSocieties={allSocieties}
             />
           </div>
-          <div className="space-y-4 p-4">
+          <div className="space-y-4 p-4 w-screen">
             {tasks?.map((task) => (
               <TaskCard
                 key={task.id}
