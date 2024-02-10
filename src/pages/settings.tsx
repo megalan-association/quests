@@ -21,8 +21,6 @@ const Settings = ({
     return <>Loading...</>;
   }
 
-  console.log(joinedSocieties);
-
   const handleChange = async () => {
     // give it half a second for the db to update when the user updates anything
     setTimeout(() => {
@@ -72,9 +70,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const joinedSocieties = await getAdminSocietyList(session.user.id);
 
+  if (!joinedSocieties) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {
-      joinedSocieties: joinedSocieties?.societies,
+      joinedSocieties: joinedSocieties.societies,
     },
   };
 };
