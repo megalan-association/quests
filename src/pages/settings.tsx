@@ -8,24 +8,31 @@ import { GetServerSideProps } from "next";
 import { getServerAuthSession } from "~/server/auth";
 import { Society, getAdminSocietyList } from "~/server/api/routers/admin";
 import { useRouter } from "next/router";
+import { api } from "~/utils/api";
+import { useState } from "react";
 
-const Settings = ({
-  joinedSocieties,
-}: {
-  joinedSocieties: Society[] | undefined;
-}) => {
+const Settings = ({ joinedSocieties }: { joinedSocieties: Society[] }) => {
   const { data: session, update: update } = useSession({ required: true });
-  const router = useRouter();
+  const [joined, setJoined] = useState(joinedSocieties);
+  const utils = api.useUtils();
 
   if (!session) {
     return <>Loading...</>;
   }
 
-  const handleChange = async () => {
+  const handleChange = () => {
     // give it half a second for the db to update when the user updates anything
-    setTimeout(() => {
+    setTimeout(async () => {
       update();
-      router.replace(router.asPath);
+      const newJoined = await utils.admin.getAdminSocietyList
+        .fetch()
+        .catch((error) => {
+          /**nothing*/
+        });
+      if (!newJoined) {
+        return;
+      }
+      setJoined(newJoined.societies);
     }, 500);
   };
 
@@ -46,7 +53,7 @@ const Settings = ({
           <LeaveSociety
             isAuthorized={session?.user.type === "ADMIN"}
             handleChange={handleChange}
-            joinedSocieties={joinedSocieties}
+            joinedSocieties={joined}
           />
         </div>
       </main>
