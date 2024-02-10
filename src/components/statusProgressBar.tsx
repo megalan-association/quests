@@ -1,13 +1,11 @@
 import { Progress } from "@nextui-org/react";
-import { api } from "~/utils/api";
+import type { StatusInfo } from "~/server/api/routers/progress";
 
-export default function StatusProgressBar() {
-  const statusArgs = api.progress.status.useQuery(undefined, {
-    retry: false,
-    refetchOnWindowFocus: true,
-  });
-  const status = statusArgs.isSuccess ? statusArgs.data : undefined;
+type Props = {
+  status: StatusInfo;
+};
 
+export default function StatusProgressBar({ status }: Props) {
   if (!status || !status.totalTasksPoints) {
     return <>Loading...</>;
   }
@@ -41,12 +39,12 @@ export default function StatusProgressBar() {
   }
 
   return (
-    <div className="flex flex-col w-full max-w-sm gap-2 items-center">
+    <div className="flex w-full max-w-sm flex-col items-center gap-2">
       <div className="flex flex-col text-center">
         <p className="text-2xl font-bold">{completedPoints}</p>
         <p className="">Total points!</p>
       </div>
-      <div className="flex w-full flex-col align-middle space-y-2">
+      <div className="flex w-full flex-col space-y-2 align-middle">
         <div className="flex flex-row items-center justify-between align-bottom">
           <p className="font-bold">Progress</p>
           <p className="text-xs text-black/60">
