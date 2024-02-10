@@ -102,7 +102,7 @@ export default function ManageTasks({
               allSocieties={allSocieties}
             />
           </div>
-          <div className="space-y-4 p-4 w-screen">
+          <div className="w-screen space-y-4 p-4">
             {tasks?.map((task) => (
               <TaskCard
                 key={task.id}

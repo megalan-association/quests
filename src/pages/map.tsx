@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import {
   TransformWrapper,
   TransformComponent,
-  useControls,
 } from "react-zoom-pan-pinch";
 import MegaLanMap from "../../public/temptemptmep.jpg";
 import MegaLanMap2 from "../../public/default.png";

@@ -4,11 +4,8 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  Progress,
-  Avatar,
   ModalFooter,
   Input,
-  useDisclosure,
   SelectItem,
   Select,
   Textarea,
@@ -28,7 +25,12 @@ const pointValues = [100, 200, 300, 400, 500];
 
 // name, desc, activated, points
 
-export default function EditTask({ oldTask, handleChange, handleClose, isOpen }: Props) {
+export default function EditTask({
+  oldTask,
+  handleChange,
+  handleClose,
+  isOpen,
+}: Props) {
   // Points need to be string for select to work smoothly
   const [newTask, setNewTask] = useState<roomTask | undefined>(undefined);
   const editMutation = api.task.edit.useMutation();
@@ -45,25 +47,30 @@ export default function EditTask({ oldTask, handleChange, handleClose, isOpen }:
       activated: newTask.activated,
       points: Number(newTask.points),
     });
-    
+
     handleClose();
     handleChange();
   };
-  
+
   useEffect(() => {
     const handleMount = () => {
       setNewTask({
         ...oldTask,
         points: oldTask.points,
-      })
-    }
+      });
+    };
 
     handleMount();
-  }, [oldTask])
+  }, [oldTask]);
 
   return (
-    <Modal isOpen={isOpen} placement="top-center" backdrop="blur" onClose={handleClose}>
-      {newTask &&
+    <Modal
+      isOpen={isOpen}
+      placement="top-center"
+      backdrop="blur"
+      onClose={handleClose}
+    >
+      {newTask && (
         <ModalContent className="h-fit">
           <ModalHeader className="flex flex-col items-center">
             <span className="text-3xl font-bold">Edit a Task</span>
@@ -92,7 +99,10 @@ export default function EditTask({ oldTask, handleChange, handleClose, isOpen }:
                 disallowEmptySelection={true}
                 selectedKeys={[String(newTask.points)]}
                 onSelectionChange={(key) =>
-                  setNewTask({ ...newTask, points: Number(Object.values(key)[1]) })
+                  setNewTask({
+                    ...newTask,
+                    points: Number(Object.values(key)[1]),
+                  })
                 }
               >
                 {pointValues.map((points) => (
@@ -120,19 +130,20 @@ export default function EditTask({ oldTask, handleChange, handleClose, isOpen }:
           </ModalBody>
           <ModalFooter>
             <div className="flex w-full flex-row justify-between gap-2">
-              <Button variant="light" color="danger" onPress={() => handleClose()}>
+              <Button
+                variant="light"
+                color="danger"
+                onPress={() => handleClose()}
+              >
                 Cancel
               </Button>
-              <Button
-                color="primary"
-                onPress={() => handleSubmit()}
-              >
+              <Button color="primary" onPress={() => handleSubmit()}>
                 Submit Changes
               </Button>
             </div>
           </ModalFooter>
-        </ModalContent> 
-      }
+        </ModalContent>
+      )}
     </Modal>
   );
 }

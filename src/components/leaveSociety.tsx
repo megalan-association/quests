@@ -1,5 +1,5 @@
 import { api } from "~/utils/api";
-import React, { useRef } from "react";
+import React from "react";
 import { useState } from "react";
 import {
   Modal,
@@ -23,7 +23,11 @@ type Props = {
   joinedSocieties: Society[] | undefined;
 };
 
-export default function LeaveSociety({ isAuthorized, handleChange, joinedSocieties }: Props) {
+export default function LeaveSociety({
+  isAuthorized,
+  handleChange,
+  joinedSocieties,
+}: Props) {
   const total = 2;
   const headerStep1 = "Choose a society from the list below to leave.";
   const headerStep2 = "Are you sure you want to leave this society?";

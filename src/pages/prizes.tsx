@@ -7,5 +7,5 @@ export default function Prizes() {
         <h1 className="px-4 text-3xl font-bold">Prizes</h1>
       </div>
     </Layout>
-  )
+  );
 }

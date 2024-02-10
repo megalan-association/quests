@@ -14,7 +14,6 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import DefaultIcon from "../../public/default.png";
-import { Society } from "~/server/api/routers/admin";
 
 type Props = {
   handleChange: () => void;
@@ -39,7 +38,7 @@ export default function JoinSociety({ handleChange }: Props) {
   }>();
   const [isSubmit, setIsSubmit] = useState(false);
 
-  // Submit only on the state 
+  // Submit only on the state
   const societyArgs = api.admin.getSocietyName.useQuery(
     { token: societyToken },
     { enabled: isSubmit, retry: false },

@@ -33,13 +33,12 @@ const TaskCard: React.FC<Props> = ({
   handleActivate,
   isAdmin,
 }) => {
-
   const handleActivateClick = (status: boolean) => {
     handleActivate(data.id, status);
-  }
+  };
 
   return (
-    <Card classNames={{header: "text-clip"}}>
+    <Card classNames={{ header: "text-clip" }}>
       <CardHeader className="space-x-4">
         <AvatarGroup isBordered max={3} size="sm">
           {data.societies.map((soc, idx) => (
@@ -52,8 +51,10 @@ const TaskCard: React.FC<Props> = ({
             />
           ))}
         </AvatarGroup>
-        <div className="flex flex-col w-full">
-          <h1 className="text-lg overflow-hidden whitespace-nowrap text-ellipsis">{data.name}</h1>
+        <div className="flex w-full flex-col">
+          <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg">
+            {data.name}
+          </h1>
           <div className="flex flex-row items-center">
             {data.societies.map((soc, idx) => (
               <React.Fragment key={idx}>

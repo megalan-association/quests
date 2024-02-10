@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
 import React from "react";
 import { useState } from "react";
-import { ArrowRightIcon } from '@radix-ui/react-icons'
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import {
   Modal,
   ModalContent,
