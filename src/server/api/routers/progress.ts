@@ -161,18 +161,20 @@ export const ProgressRouter = createTRPCRouter({
         points: number;
       }[]
     >`
-    select
+      select
         u.id,
         u.name,
         u.image,
         sum(t.points) as points
-    from
+      from
         "User" u
         join "_TaskToUser" ttu on ttu."B" = u.id
         join "Task" t on ttu."A" = t.id
-    group by
-        u.id, points
-    order by
+      group by
+        u.id,
+        u.name,
+        u.image
+      order by
         points desc;
     `;
 
@@ -227,31 +229,33 @@ export const ssrStatus = async (session: Session) => {
     completedTasks,
     totalTasks,
   };
-}
+};
 
 export const ssrLeaderboard = async () => {
   const leaderboard = await db.$queryRaw<
-      {
-        id: number;
-        name: string | null;
-        image: string | null;
-        points: number;
-      }[]
-    >`
+    {
+      id: number;
+      name: string | null;
+      image: string | null;
+      points: number;
+    }[]
+  >`
     select
-        u.id,
-        u.name,
-        u.image,
-        sum(t.points) as points
+      u.id,
+      u.name,
+      u.image,
+      sum(t.points) as points
     from
-        "User" u
-        join "_TaskToUser" ttu on ttu."B" = u.id
-        join "Task" t on ttu."A" = t.id
+      "User" u
+      join "_TaskToUser" ttu on ttu."B" = u.id
+      join "Task" t on ttu."A" = t.id
     group by
-        u.id, points
+      u.id,
+      u.name,
+      u.image
     order by
-        points desc;
-    `;
+      points desc;
+  `;
 
-    return leaderboard;
-}
+  return leaderboard;
+};

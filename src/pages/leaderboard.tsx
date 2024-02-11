@@ -86,7 +86,7 @@ export default function App() {
             </TableHeader>
             <TableBody>
               {leaderboard.map((item, index) => (
-                <TableRow key={item.id}>
+                <TableRow key={index}>
                   {(columnKey) => (
                     <TableCell>{renderCell(index + 1, item, columnKey)}</TableCell>
                   )}
