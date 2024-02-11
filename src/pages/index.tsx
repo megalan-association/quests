@@ -28,7 +28,7 @@ const Index = () => {
           {session ? (
             <Button
               as={Link}
-              href="/api/auth/signin"
+              href="/dashboard"
               color="primary"
               startContent={<DashboardIcon className="h-4 w-4" />}
             >

@@ -190,24 +190,26 @@ const Room = ({ room }: { room: roomData }) => {
               ))}
           </div>
         </div>
-        <div className="space-y-8 px-4 py-8">
-          {data.incompleteTasks.map((task, idx) => (
-            <React.Fragment key={idx}>
-              <TaskCard
-                key={task.id}
-                data={task}
-                showComplete
-                isCompleted={false}
-                handleShowModal={(id) => {
-                  setSelectedTask(id);
-                  setShowModal(true);
-                }}
-                isAdmin={false}
-                handleActivate={(status) => {}}
-              />
-            </React.Fragment>
-          ))}
-        </div>
+        {data.incompleteTasks.length > 0 && (
+          <div className="space-y-8 px-4 py-8">
+            {data.incompleteTasks.map((task, idx) => (
+              <React.Fragment key={idx}>
+                <TaskCard
+                  key={task.id}
+                  data={task}
+                  showComplete
+                  isCompleted={false}
+                  handleShowModal={(id) => {
+                    setSelectedTask(id);
+                    setShowModal(true);
+                  }}
+                  isAdmin={false}
+                  handleActivate={(status) => {}}
+                />
+              </React.Fragment>
+            ))}
+          </div>
+        )}
         {data.completedTasks.length > 0 && (
           <>
             <h1 className="pt-8 text-center text-xl font-bold">
