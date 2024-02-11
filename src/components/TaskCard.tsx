@@ -52,14 +52,14 @@ const TaskCard: React.FC<Props> = ({
         </AvatarGroup>
         <div className="flex flex-col">
           <h1 className="break-all text-lg">{data.name}</h1>
-          <div className="flex flex-row items-center">
+          <div className="flex w-full flex-col items-start justify-start">
             {data.societies.map((soc, idx) => (
-              <React.Fragment key={idx}>
-                <h1 className="text-sm text-foreground/60">{soc.name}</h1>
-                {idx !== data.societies.length - 1 && (
-                  <DotFilledIcon className="text-foreground/60" />
+              <div key={idx} className="flex flex-row items-center">
+                {idx !== data.societies.length && idx !== 0 && (
+                  <DotFilledIcon />
                 )}
-              </React.Fragment>
+                <h1 className="text-sm text-foreground/60">{soc.name}</h1>
+              </div>
             ))}
           </div>
         </div>

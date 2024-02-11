@@ -123,8 +123,8 @@ const Room = ({ room }: { room: roomData }) => {
         userId={session.data.user.id}
       />
       <Layout>
-        <h1 className="w-full pt-6 text-center text-3xl font-bold">
-          {room.info.name} Room
+        <h1 className="w-full px-4 pt-6 text-center text-3xl font-bold">
+          {room.info.name}
         </h1>
         <div className="space-y-2 p-4">
           <div className="flex flex-row justify-between">
@@ -149,7 +149,7 @@ const Room = ({ room }: { room: roomData }) => {
         </div>
         <div className="space-y-2 p-4">
           <p className="text-medium font-bold">Filter Societies</p>
-          <div className="space-x-2">
+          <div className="space-x-2 space-y-2">
             {selectedSocieties.map((soc, idx) => (
               <Chip
                 key={idx}

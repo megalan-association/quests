@@ -46,7 +46,7 @@ const Header: React.FC<Props> = ({ session }) => {
             width={500}
             height={250}
             alt="logo"
-            className="h-5 w-fit"
+            className="h-5 w-fit object-fill"
           />
           {/* <p className="font-bold text-inherit">MegaLAN</p> */}
         </NavbarBrand>
@@ -59,7 +59,7 @@ const Header: React.FC<Props> = ({ session }) => {
             width={500}
             height={250}
             alt="logo"
-            className="h-5 w-fit"
+            className="h-5 w-fit object-fill"
           />
           {/* <p className="font-bold text-inherit">MegaLAN</p> */}
         </NavbarBrand>
