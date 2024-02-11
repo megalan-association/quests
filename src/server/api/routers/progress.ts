@@ -1,3 +1,4 @@
+import { Session } from "next-auth";
 import { z } from "zod";
 
 import {
@@ -5,7 +6,6 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-
 import { db } from "~/server/db";
 
 export const ProgressRouter = createTRPCRouter({
@@ -161,18 +161,20 @@ export const ProgressRouter = createTRPCRouter({
         points: number;
       }[]
     >`
-    select
+      select
         u.id,
         u.name,
         u.image,
         sum(t.points) as points
-    from
+      from
         "User" u
         join "_TaskToUser" ttu on ttu."B" = u.id
         join "Task" t on ttu."A" = t.id
-    group by
-        u.id
-    order by
+      group by
+        u.id,
+        u.name,
+        u.image
+      order by
         points desc;
     `;
 
@@ -180,12 +182,12 @@ export const ProgressRouter = createTRPCRouter({
   }),
 });
 
-export const getStatus = async (userId: number) => {
+export const ssrStatus = async (session: Session) => {
   const completedPoints = await db.task.aggregate({
     where: {
       completedUsers: {
         some: {
-          id: userId,
+          id: session.user.id,
         },
       },
       activated: true,
@@ -208,7 +210,7 @@ export const getStatus = async (userId: number) => {
     where: {
       completedUsers: {
         some: {
-          id: userId,
+          id: session.user.id,
         },
       },
       activated: true,
@@ -227,45 +229,33 @@ export const getStatus = async (userId: number) => {
     completedTasks,
     totalTasks,
   };
-}
+};
 
-export const getLeaderboard = async () => {
+export const ssrLeaderboard = async () => {
   const leaderboard = await db.$queryRaw<
-      {
-        id: number;
-        name: string | null;
-        image: string | null;
-        points: number;
-      }[]
-    >`
+    {
+      id: number;
+      name: string | null;
+      image: string | null;
+      points: number;
+    }[]
+  >`
     select
-        u.id,
-        u.name,
-        u.image,
-        sum(t.points) as points
+      u.id,
+      u.name,
+      u.image,
+      sum(t.points) as points
     from
-        "User" u
-        join "_TaskToUser" ttu on ttu."B" = u.id
-        join "Task" t on ttu."A" = t.id
+      "User" u
+      join "_TaskToUser" ttu on ttu."B" = u.id
+      join "Task" t on ttu."A" = t.id
     group by
-        u.id
+      u.id,
+      u.name,
+      u.image
     order by
-        points desc;
-    `;
+      points desc;
+  `;
 
   return leaderboard;
-}
-
-export type StatusInfo = {
-  completedPoints: number | null;
-  totalTasksPoints: number | null;
-  completedTasks: number;
-  totalTasks: number;
-}
-
-export type LeaderboardEntry = {
-  id: number;
-  name: string | null;
-  image: string | null;
-  points: number;
-}
+};

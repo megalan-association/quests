@@ -61,7 +61,9 @@ export default function StatusProgressBar({ status }: Props) {
           size="md"
           aria-label="Loading..."
           color="warning"
-          value={((completedPoints - milestoneStart) / milestoneEnd) * 100}
+          isIndeterminate={!status}
+          value={status.completedPoints ?? 0}
+          maxValue={status.totalTasksPoints ?? 10}
         />
         <p className="text-xs text-black/60">
           Completed <span className="font-bold">{status.completedTasks}</span>{" "}

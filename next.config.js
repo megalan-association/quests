@@ -17,6 +17,13 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    remotePatterns: [
+      {
+        hostname: "www.learningenvironments.unsw.edu.au",
+      },
+    ],
+  },
 };
 
 export default config;

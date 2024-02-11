@@ -26,6 +26,7 @@ const Header: React.FC<Props> = ({ session }) => {
 
   const menuItems = [
     { name: "Home", href: "/" },
+    { name: "Leaderboard", href: "/leaderboard" },
     { name: "Dashboard", href: "/dashboard" },
     { name: "Settings", href: "/settings" },
   ];
@@ -50,21 +51,13 @@ const Header: React.FC<Props> = ({ session }) => {
           {/* <AcmeLogo /> */}
           <p className="font-bold text-inherit">MegaLAN</p>
         </NavbarBrand>
-        <NavbarItem>
-          <Link color="foreground" href="/">
-            Home
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="/dashboard">
-            Dashboard
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="/settings">
-            Settings
-          </Link>
-        </NavbarItem>
+        {menuItems.map((item, index) => (
+          <NavbarItem key={index}>
+            <Link color="foreground" href={item.href}>
+              {item.name}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
 
       <NavbarContent justify="end">
