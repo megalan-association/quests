@@ -104,9 +104,9 @@ export const RoomRouter = createTRPCRouter({
     }),
 });
 
-export const ssrGetRoomList = async () => {
+export const GetRoomList = async () => {
   return await db.room.findMany();
-}
+};
 
 // turned this into a function for Server Side Rendering
 export const getRoomData = async (roomId: number, userId: number) => {
