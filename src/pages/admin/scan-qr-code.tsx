@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import * as Toast from "@radix-ui/react-toast";
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { api } from "~/utils/api";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 
 const ScanQRCode = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -80,11 +82,16 @@ const ScanQRCode = () => {
       <p className="w-full text-center text-foreground/60">
         Give the Scanner a Moment to Start
       </p>
-      <div ref={videoContainerRef} className="">
+      <div ref={videoContainerRef} className="overflow-hidden rounded-lg p-4">
         <video
           ref={videoRef}
-          className="aspect-square overflow-hidden rounded-lg object-cover p-4"
+          className="aspect-square overflow-hidden rounded-lg object-cover"
         />
+      </div>
+      <div className="px-4">
+        <Button as={Link} href="/dashboard" color="primary" className="w-full">
+          Back to Dashboard
+        </Button>
       </div>
     </Layout>
   );
