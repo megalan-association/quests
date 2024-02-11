@@ -44,10 +44,7 @@ export default function Leaderboard({ leaderboard, status }: Props) {
           return (
             <div className="flex flex-row items-center space-x-4">
               <div className="">
-                <Avatar
-                  size="sm"
-                  src={user.image ? user.image : DefaultIcon.src}
-                />
+                <Avatar size="sm" src={user.image ?? undefined} showFallback />
               </div>
               <p>{user.name}</p>
             </div>
