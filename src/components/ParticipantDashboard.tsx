@@ -1,93 +1,77 @@
-import { Cog6ToothIcon, MapIcon } from "@heroicons/react/16/solid"
-import { Button } from "@nextui-org/react"
-import Image from "next/image"
-import Link from "next/link"
-import StatusProgressBar from "./statusProgressBar"
-import { RoomInfo } from "~/pages/dashboard"
+import { Cog6ToothIcon, MapIcon } from "@heroicons/react/16/solid";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+} from "@nextui-org/react";
+import Image from "next/image";
+import Link from "next/link";
+import StatusProgressBar from "./statusProgressBar";
+import { RoomInfo } from "~/pages/dashboard";
+import Layout from "~/pages/_layout";
+import { MixIcon } from "@radix-ui/react-icons";
 
 type PropsType = {
-  userName: string,
-  rooms: RoomInfo[]
-}
+  userName: string;
+  rooms: RoomInfo[];
+};
 
 const ParticipantDashboard: React.FC<PropsType> = (props) => {
   return (
-    <main className="w-full lg:w-[1024px] mx-auto p-2 sm:p-4">
-      <h2 className="text-4xl font-bold">Hi, {props.userName}</h2>
-      <div>
+    <Layout>
+      <main className="flex w-full flex-col items-center px-4">
+        <h1 className="pb-6 pt-6 text-3xl font-bold">Hi, {props.userName}</h1>
         <StatusProgressBar />
-      </div>
-      <div className="hidden sm:block text-center py-1">
-        <Button
-          as={Link}
-          href="/settings"
-          color="primary"
-          startContent={<Cog6ToothIcon className="w-4 h-4" />}
-          className="w-64 font-bold mr-1"
-        >
-          Settings
-        </Button>
+        <div className="flex w-full max-w-96 flex-col space-y-4 px-8 pt-8">
           <Button
-            /*
-              Uncomment below attributes and fill in href when page exists
-              as={Link}
-              href=""
-            */
+            as={Link}
+            href="/map"
             color="primary"
-            startContent={<MapIcon className="w-4 h-4" />}
-            className="w-64 font-bold ml-1"
+            startContent={<MapIcon className="h-4 w-4" />}
           >
             Venue Map
           </Button>
-      </div>
-      <div className="block sm:hidden text-center py-1">
           <Button
             as={Link}
             href="/settings"
             color="primary"
-            startContent={<Cog6ToothIcon className="w-4 h-4" />}
-            className="w-64 font-bold"
+            startContent={<Cog6ToothIcon className="h-4 w-4" />}
           >
             Settings
           </Button>
-      </div>
-      <div className="block sm:hidden text-center py-1">
-        <Button
-          /*
-            Uncomment below attributes and fill in href when page exists
-            as={Link}
-            href=""
-          */
-          color="primary"
-          startContent={<MapIcon className="w-4 h-4" />}
-          className="w-64 font-bold"
-        >
-          Venue Map
-        </Button>
-      </div>
-      <div>
-        <h3 className="text-lg font-bold">MegaLAN Rooms</h3>
-        <div className="block sm:grid sm:grid-cols-2 lg:grid-cols-3 mx-auto">
-          {props.rooms.map((r) => (
-            <div className="p-1">
-              <Button
-                key={r.id}
-                as={Link}
-                href={`/rooms/${r.id}`}
-                size="lg"
-                startContent={r.image 
-                  ? <Image src={r.image} alt="" className="h-8 w-8" height={32} width={32} /> 
-                  : <div className="h-8 w-8 rounded-full bg-primary-500" />}
-                className="w-full text-2xl font-bold"
-              >
-                {r.name}
-              </Button>
-            </div>
-          ))}
         </div>
-      </div>
-    </main>
-  )
-}
+        <div className="flex w-full flex-col items-center pt-8">
+          <h3 className="pb-4 text-2xl font-bold">Rooms</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {props.rooms.map((r) => (
+              <a href={`/rooms/${r.id}`} key={r.id}>
+                <Card
+                  radius="lg"
+                  isFooterBlurred
+                  className="aspect-square border-none"
+                  key={r.id}
+                >
+                  <Image
+                    alt={r.name + "-image"}
+                    className="h-full object-cover"
+                    height={200}
+                    src={r.image ?? "/default.png"}
+                    width={200}
+                  />
+                  <CardFooter className="absolute bottom-0 z-10 w-full rounded-lg">
+                    <p className="font-bold text-white/80">{r.name}</p>
+                  </CardFooter>
+                </Card>
+              </a>
+            ))}
+          </div>
+        </div>
+      </main>
+    </Layout>
+  );
+};
 
-export default ParticipantDashboard
+export default ParticipantDashboard;

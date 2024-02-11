@@ -1,51 +1,45 @@
-import { Cog6ToothIcon, MapIcon, QrCodeIcon } from "@heroicons/react/16/solid"
-import { Button, Card } from "@nextui-org/react"
-import Link from "next/link"
+import { Cog6ToothIcon, MapIcon, QrCodeIcon } from "@heroicons/react/16/solid";
+import { Button, Card } from "@nextui-org/react";
+import Link from "next/link";
+import Layout from "~/pages/_layout";
 
 const AdminDashboard: React.FC = () => {
   return (
-    <main>
-      <Card className="w-full md:w-[768px] mx-auto p-2 text-center">
-        <h1 className="font-bold text-4xl">Admin Dashboard</h1>
-        <div className="py-2">
+    <Layout>
+      <main className="flex w-full flex-col items-center">
+        <h1 className="pt-6 text-4xl font-bold">Admin Dashboard</h1>
+        <div className="flex w-full max-w-96 flex-col space-y-4 px-8 pt-16">
           <Button
             as={Link}
             href="/admin/scan-qr-code"
             color="primary"
-            startContent={<QrCodeIcon className="w-4 h-4" />}
-            className="w-64 font-bold"
+            startContent={<QrCodeIcon className="h-4 w-4" />}
+            className=""
           >
             Scan QR Code
           </Button>
-        </div>
-        <div className="py-2">
           <Button
-            /*
-              Uncomment below attributes and fill in href when page exists
-              as={Link}
-              href=""
-            */
+            as={Link}
+            href="/admin/manage-tasks"
             color="primary"
-            startContent={<MapIcon className="w-4 h-4" />}
-            className="w-64 font-bold"
+            startContent={<MapIcon className="h-4 w-4" />}
+            className=""
           >
             Manage Tasks
           </Button>
-        </div>
-        <div className="py-2">
           <Button
             as={Link}
             href="/settings"
             color="primary"
-            startContent={<Cog6ToothIcon className="w-4 h-4" />}
-            className="w-64 font-bold"
+            startContent={<Cog6ToothIcon className="h-4 w-4" />}
+            className=""
           >
             Settings
           </Button>
         </div>
-      </Card>
-    </main>
-  )
-}
+      </main>
+    </Layout>
+  );
+};
 
-export default AdminDashboard
+export default AdminDashboard;
