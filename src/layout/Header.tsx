@@ -13,6 +13,7 @@ import {
 import { PersonIcon } from "@radix-ui/react-icons";
 import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -41,15 +42,27 @@ const Header: React.FC<Props> = ({ session }) => {
 
       <NavbarContent className="pr-3 sm:hidden" justify="center">
         <NavbarBrand>
-          {/* <AcmeLogo /> */}
-          <p className="font-bold text-inherit">MegaLAN</p>
+          <Image
+            src="/megalan_logo.png"
+            width={500}
+            height={250}
+            alt="logo"
+            className="h-5 w-fit"
+          />
+          {/* <p className="font-bold text-inherit">MegaLAN</p> */}
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden gap-4 sm:flex" justify="center">
         <NavbarBrand>
-          {/* <AcmeLogo /> */}
-          <p className="font-bold text-inherit">MegaLAN</p>
+          <Image
+            src="/megalan_logo.png"
+            width={500}
+            height={250}
+            alt="logo"
+            className="h-5 w-fit"
+          />
+          {/* <p className="font-bold text-inherit">MegaLAN</p> */}
         </NavbarBrand>
         {menuItems.map((item, index) => (
           <NavbarItem key={index}>
