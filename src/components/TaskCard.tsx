@@ -50,10 +50,8 @@ const TaskCard: React.FC<Props> = ({
             />
           ))}
         </AvatarGroup>
-        <div className="flex w-full flex-col">
-          <h1 className="overflow-hidden text-ellipsis whitespace-nowrap text-lg">
-            {data.name}
-          </h1>
+        <div className="flex flex-col">
+          <h1 className="break-all text-lg">{data.name}</h1>
           <div className="flex flex-row items-center">
             {data.societies.map((soc, idx) => (
               <React.Fragment key={idx}>
