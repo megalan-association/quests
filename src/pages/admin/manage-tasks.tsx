@@ -49,7 +49,7 @@ export default function ManageTasks({
   if (!session) {
     return <>Loading...</>;
   } else if (session.user.type !== "ADMIN") {
-    return <UnAuthorized />;
+    return <UnAuthorized permissionsType="ADMIN" />;
   }
 
   const handleShowEdit = (id: number) => {

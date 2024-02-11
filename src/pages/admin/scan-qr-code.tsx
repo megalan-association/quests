@@ -6,8 +6,13 @@ import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { api } from "~/utils/api";
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
+import { GetServerSideProps } from "next";
+import { getServerAuthSession } from "~/server/auth";
+import { useSession } from "next-auth/react";
+import UnAuthorized from "~/components/unauthorized";
 
 const ScanQRCode = () => {
+  const { data: session } = useSession();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -61,6 +66,9 @@ const ScanQRCode = () => {
     };
   }, []);
 
+  if (session && session.user.type !== "ADMIN")
+    return <UnAuthorized permissionsType="ADMIN" />;
+
   return (
     <Layout>
       <Toast.Provider swipeDirection="right">
@@ -95,6 +103,26 @@ const ScanQRCode = () => {
       </div>
     </Layout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  let id = ctx.params?.id;
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
 };
 
 export default ScanQRCode;

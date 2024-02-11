@@ -17,6 +17,7 @@ import React from "react";
 import { CheckCircledIcon, CheckIcon } from "@radix-ui/react-icons";
 import CompleteTaskModal from "~/components/CompleteTaskModal";
 import * as Toast from "@radix-ui/react-toast";
+import UnAuthorized from "~/components/unauthorized";
 
 const Room = ({ room }: { room: roomData }) => {
   const router = useRouter();
@@ -96,6 +97,9 @@ const Room = ({ room }: { room: roomData }) => {
     setShowModal(false);
     if (success) setTimeout(() => setShowConfirmationToast(true), 500);
   };
+
+  if (session.data.user.type !== "PARTICIPANT")
+    return <UnAuthorized permissionsType="PARTICIPANT" />;
 
   return (
     <>
