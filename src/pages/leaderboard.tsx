@@ -13,6 +13,7 @@ import { api } from "~/utils/api";
 import StatusProgressBar from "~/components/statusProgressBar";
 
 import DefaultIcon from "../../public/default.png";
+import Layout from "./_layout";
 
 type User = {
   id: number;
@@ -62,40 +63,50 @@ export default function App() {
   );
 
   return (
-    <main className="flex h-screen flex-col justify-start overflow-y-clip p-6">
-      <div className="justify-top container flex h-full w-full flex-col items-center gap-4 space-y-2">
-        <h1>Leaderboards</h1>
-        <StatusProgressBar />
-        <div className="flex h-full w-full overflow-y-scroll">
-          <Table
-            aria-label="Example table with custom cells"
-            isHeaderSticky={true}
-            isStriped={true}
-            classNames={{wrapper: "p-4 pt-0 shadow-none"}}
-          >
-            <TableHeader
-              columns={[
-                { key: "index", label: "Rank"},
-                { key: "name", label: "User" },
-                { key: "points", label: "Points" },
-              ]}
+    <Layout>
+      <main className="flex h-full flex-col justify-start px-4">
+        <div className="justify-top container flex h-full w-full flex-col items-center gap-4 space-y-2">
+          <h1 className="pt-6 text-3xl font-bold">Leaderboard</h1>
+          <StatusProgressBar />
+          <div className="flex h-full w-full overflow-y-scroll">
+            <Table
+              aria-label="table with custom cells"
+              isHeaderSticky={true}
+              isStriped={true}
+              classNames={{ wrapper: "p-4 pt-0 shadow-none" }}
             >
-              {(column) => (
-                column.key === "index" ? <TableColumn key={column.key}><p className="text-center">{column.label}</p></TableColumn> : <TableColumn key={column.key}>{column.label}</TableColumn>
-              )}
-            </TableHeader>
-            <TableBody>
-              {leaderboard.map((item, index) => (
-                <TableRow key={index}>
-                  {(columnKey) => (
-                    <TableCell>{renderCell(index + 1, item, columnKey)}</TableCell>
-                  )}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              <TableHeader
+                columns={[
+                  { key: "index", label: "Rank" },
+                  { key: "name", label: "User" },
+                  { key: "points", label: "Points" },
+                ]}
+              >
+                {(column) =>
+                  column.key === "index" ? (
+                    <TableColumn key={column.key}>
+                      <p className="text-center">{column.label}</p>
+                    </TableColumn>
+                  ) : (
+                    <TableColumn key={column.key}>{column.label}</TableColumn>
+                  )
+                }
+              </TableHeader>
+              <TableBody>
+                {leaderboard.map((item, index) => (
+                  <TableRow key={index}>
+                    {(columnKey) => (
+                      <TableCell>
+                        {renderCell(index + 1, item, columnKey)}
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </Layout>
   );
 }
