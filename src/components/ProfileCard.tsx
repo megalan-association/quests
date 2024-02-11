@@ -1,11 +1,9 @@
 import { Avatar, Card, CardBody } from "@nextui-org/react";
 import { PersonIcon } from "@radix-ui/react-icons";
-import { Session } from "next-auth";
 
 type Props = {
   name?: string;
   image?: string;
-  //   handleChange: () => void;
 };
 
 const ProfileCard: React.FC<Props> = ({ name, image }) => {

@@ -1,13 +1,11 @@
 import { Progress } from "@nextui-org/react";
-import { api } from "~/utils/api";
+import { type StatusInfo } from "~/server/api/routers/progress";
 
-export default function StatusProgressBar() {
-  const statusArgs = api.progress.status.useQuery(undefined, {
-    retry: false,
-    refetchOnWindowFocus: true,
-  });
-  const status = statusArgs.isSuccess ? statusArgs.data : undefined;
+type Props = {
+  status: StatusInfo;
+};
 
+export default function StatusProgressBar({ status }: Props) {
   if (!status || !status.totalTasksPoints) {
     return <>Loading...</>;
   }

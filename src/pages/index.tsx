@@ -44,8 +44,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-            </p>
+            <p className="text-2xl text-white"></p>
             <AuthShowcase />
           </div>
         </div>

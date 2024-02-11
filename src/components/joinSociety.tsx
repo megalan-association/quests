@@ -38,12 +38,16 @@ export default function JoinSociety({ handleChange }: Props) {
   }>();
   const [isSubmit, setIsSubmit] = useState(false);
 
+  // Submit only on the state
   const societyArgs = api.admin.getSocietyName.useQuery(
     { token: societyToken },
     { enabled: isSubmit, retry: false },
   );
 
+  // If we did fetch something, and we are expecting a response
   if (societyArgs.isFetched && isSubmit) {
+    // We received response, not expecting a response
+    // This is to avoid using stale data from the previous submit
     setIsSubmit(false);
     if (societyArgs.isSuccess) {
       setChosenSociety(societyArgs.data);
@@ -52,6 +56,7 @@ export default function JoinSociety({ handleChange }: Props) {
   }
 
   const joinSocietyMutation = api.admin.joinSociety.useMutation();
+
   const handleSubmit = () => {
     if (chosenSociety != undefined) {
       joinSocietyMutation.mutate({
@@ -60,7 +65,6 @@ export default function JoinSociety({ handleChange }: Props) {
     }
 
     handleCancel();
-
     handleChange();
   };
 

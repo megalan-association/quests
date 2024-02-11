@@ -9,10 +9,17 @@ import {
   getKeyValue,
   Avatar,
 } from "@nextui-org/react";
-import { api } from "~/utils/api";
 import StatusProgressBar from "~/components/statusProgressBar";
 
 import DefaultIcon from "../../public/default.png";
+import { GetServerSideProps } from "next";
+import { getServerAuthSession } from "~/server/auth";
+import {
+  type LeaderboardEntry,
+  getLeaderboard,
+  getStatus,
+  StatusInfo,
+} from "~/server/api/routers/progress";
 import Layout from "./_layout";
 
 type User = {
@@ -22,20 +29,12 @@ type User = {
   points: number;
 };
 
-export default function App() {
-  const [page, setPage] = useState(1);
+type Props = {
+  leaderboard: LeaderboardEntry[];
+  status: StatusInfo;
+};
 
-  const leaderboardArgs = api.progress.leaderboard.useQuery(undefined, {
-    retry: false,
-    refetchInterval: 20000,
-    refetchOnWindowFocus: false,
-    refetchIntervalInBackground: false,
-  });
-
-  const leaderboard: User[] = leaderboardArgs.isSuccess
-    ? leaderboardArgs.data
-    : [];
-
+export default function Leaderboard({ leaderboard, status }: Props) {
   const renderCell = React.useCallback(
     (index: number, user: User, columnKey: React.Key) => {
       switch (columnKey) {
@@ -64,13 +63,13 @@ export default function App() {
 
   return (
     <Layout>
-      <main className="flex h-full flex-col justify-start px-4">
+      <main className="flex flex-col justify-start overflow-y-clip px-4">
         <div className="justify-top container flex h-full w-full flex-col items-center gap-4 space-y-2">
           <h1 className="pt-6 text-3xl font-bold">Leaderboard</h1>
-          <StatusProgressBar />
+          <StatusProgressBar status={status} />
           <div className="flex h-full w-full overflow-y-scroll">
             <Table
-              aria-label="table with custom cells"
+              aria-label="Example table with custom cells"
               isHeaderSticky={true}
               isStriped={true}
               classNames={{ wrapper: "p-4 pt-0 shadow-none" }}
@@ -94,7 +93,7 @@ export default function App() {
               </TableHeader>
               <TableBody>
                 {leaderboard.map((item, index) => (
-                  <TableRow key={index}>
+                  <TableRow key={item.id}>
                     {(columnKey) => (
                       <TableCell>
                         {renderCell(index + 1, item, columnKey)}
@@ -110,3 +109,32 @@ export default function App() {
     </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  const leaderboard = await getLeaderboard();
+  const status = await getStatus(session.user.id);
+
+  return {
+    props: {
+      leaderboard: JSON.parse(
+        JSON.stringify(
+          leaderboard,
+          (_key, value) =>
+            typeof value === "bigint" ? value.toString() : value, // return everything else unchanged
+        ),
+      ),
+      status,
+    },
+  };
+};

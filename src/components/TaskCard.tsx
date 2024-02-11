@@ -9,7 +9,6 @@ import {
   Checkbox,
   Chip,
   Divider,
-  Modal,
 } from "@nextui-org/react";
 import { DotFilledIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import { roomTask } from "~/server/api/routers/room";
@@ -33,13 +32,12 @@ const TaskCard: React.FC<Props> = ({
   handleActivate,
   isAdmin,
 }) => {
-
   const handleActivateClick = (status: boolean) => {
     handleActivate(data.id, status);
-  }
+  };
 
   return (
-    <Card>
+    <Card classNames={{ header: "text-clip" }}>
       <CardHeader className="space-x-4">
         <AvatarGroup isBordered max={3} size="sm">
           {data.societies.map((soc, idx) => (
@@ -53,7 +51,7 @@ const TaskCard: React.FC<Props> = ({
           ))}
         </AvatarGroup>
         <div className="flex flex-col">
-          <h1 className="text-lg ">{data.name}</h1>
+          <h1 className="break-all text-lg">{data.name}</h1>
           <div className="flex flex-row items-center">
             {data.societies.map((soc, idx) => (
               <React.Fragment key={idx}>

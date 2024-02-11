@@ -1,4 +1,3 @@
-import { $Enums } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import UnAuthorized from "~/components/unauthorized";
 import Layout from "../_layout";
@@ -9,37 +8,27 @@ import { GetServerSideProps } from "next";
 import {
   getAdminSocietyList,
   getAllSocieties,
+  getAllTask,
 } from "~/server/api/routers/admin";
 import { api } from "~/utils/api";
 import TaskCard from "~/components/TaskCard";
 import EditTask from "~/components/editTask";
-import { useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
 import { roomTask } from "~/server/api/routers/room";
-import CompleteTaskModal from "~/components/CompleteTaskModal";
-
-export type Societies = {
-  id: number;
-  name: string;
-  image: string | null;
-};
+import type { Society, Task } from "~/server/api/routers/admin";
 
 export default function ManageTasks({
   joinedSocieties,
   allSocieties,
+  allTasks,
 }: {
-  joinedSocieties: Societies[];
-  allSocieties: Societies[];
+  joinedSocieties: Society[];
+  allSocieties: Society[];
+  allTasks: Task[];
 }) {
   const { data: session, update: update } = useSession({ required: true });
 
-  const tasks = api.admin.getAllTask.useQuery(undefined, {
-    refetchInterval: 10000,
-    refetchIntervalInBackground: false,
-  });
-
-  const activateMutation = api.task.activate.useMutation();
-  const deactivateMutation = api.task.deactivate.useMutation();
+  const [tasks, setTasks] = useState(allTasks);
 
   const [showEdit, setShowEdit] = useState(false);
   const initTask: roomTask = {
@@ -48,10 +37,14 @@ export default function ManageTasks({
     name: "",
     points: 100,
     societies: [],
-    activated: false
-  }
-  
+    activated: false,
+  };
+
   const [selectedTask, setSelectedTask] = useState<roomTask>(initTask);
+
+  const utils = api.useUtils();
+  const activateMutation = api.task.activate.useMutation();
+  const deactivateMutation = api.task.deactivate.useMutation();
 
   if (!session) {
     return <>Loading...</>;
@@ -62,50 +55,55 @@ export default function ManageTasks({
   const handleShowEdit = (id: number) => {
     // get old task data from all tasks
     // setshow modal
-    
-    const newSelectedTask = tasks.data?.find((task) => task.id == id);
-    
+
+    const newSelectedTask = tasks.find((task) => task.id == id);
+
     if (!newSelectedTask) return;
 
-    console.log("New task selected");
-    console.log(newSelectedTask);
-    
     setSelectedTask(newSelectedTask);
 
     setShowEdit(true);
   };
 
-  const handleClose = () => {
-    setShowEdit(false);
-  }
-
-  const handleActivate = (id: number, status: boolean) => {
-    console.log(status)
-    status ? activateMutation.mutate({id: id}) : deactivateMutation.mutate({id: id});
+  const handleChange = () => {
+    setTimeout(async () => {
+      const newTasks = await utils.admin.getAllTask.fetch();
+      setTasks(newTasks);
+    }, 500);
   };
 
-  const handleChange = async () => {
-    // give it half a second for the db to update when the user updates anything
-    setTimeout(() => {
-      update();
-    }, 500);
+  const handleClose = () => {
+    setShowEdit(false);
+  };
+
+  const handleActivate = (id: number, status: boolean) => {
+    status
+      ? activateMutation.mutate({ id: id })
+      : deactivateMutation.mutate({ id: id });
   };
 
   return (
     <>
-      <EditTask oldTask={selectedTask} handleClose={handleClose} isOpen={selectedTask && showEdit} />
+      <EditTask
+        oldTask={selectedTask}
+        handleChange={handleChange}
+        handleClose={handleClose}
+        isOpen={selectedTask && showEdit}
+      />
       <Layout>
         <main className="flex flex-col items-center">
-        <h1 className="pt-6 pb-10 text-3xl font-bold w-full text-center">Manage Tasks</h1>
-        <div className="flex flex-row w-full justify-end px-4">
-          <CreateTask
-          handleChange={handleChange}
-          joinedSocieties={joinedSocieties}
-          allSocieties={allSocieties}
-          />
-        </div>
-          <div className="p-4 space-y-4">
-            {tasks.data?.map((task) => (
+          <h1 className="w-full pb-10 pt-6 text-center text-3xl font-bold">
+            Manage Tasks
+          </h1>
+          <div className="flex w-full flex-row justify-end px-4">
+            <CreateTask
+              handleChange={handleChange}
+              joinedSocieties={joinedSocieties}
+              allSocieties={allSocieties}
+            />
+          </div>
+          <div className="w-screen space-y-4 p-4">
+            {tasks?.map((task) => (
               <TaskCard
                 key={task.id}
                 data={task}
@@ -135,6 +133,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const joinedSocieties = await getAdminSocietyList(session.user.id);
   const allSocieties = await getAllSocieties();
+  const allTasks = await getAllTask(session.user.id);
 
   if (!joinedSocieties) {
     return {
@@ -148,7 +147,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       joinedSocieties: joinedSocieties.societies,
-      allSocieties: allSocieties,
+      allSocieties,
+      allTasks,
     },
   };
 };

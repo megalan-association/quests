@@ -4,7 +4,7 @@ import Layout from "~/pages/_layout";
 export default function UnAuthorized() {
   return (
     <Layout>
-      <main className="flex flex-col text-center items-center gap-4 px-4 text-xl">
+      <main className="flex flex-col items-center gap-4 px-4 text-center text-xl">
         <h1 className="pt-6 text-3xl font-bold">Unauthorised</h1>
         <div>You are do not have the Admin permissions to view this page.</div>
         <div>

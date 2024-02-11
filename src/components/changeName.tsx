@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
 import React from "react";
 import { useState } from "react";
-import { ArrowRightIcon } from '@radix-ui/react-icons'
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import {
   Modal,
   ModalContent,
@@ -44,10 +44,6 @@ export default function ChangeName({ currentName, handleChange }: Props) {
 
   const handleClose = () => {
     setNewName("");
-    setCurrentStep(0);
-  };
-
-  const handleCancel = () => {
     setCurrentStep(0);
   };
 
@@ -128,7 +124,7 @@ export default function ChangeName({ currentName, handleChange }: Props) {
                     <Button
                       variant="light"
                       color="danger"
-                      onPress={() => handleCancel()}
+                      onPress={() => handleClose()}
                     >
                       Cancel
                     </Button>
