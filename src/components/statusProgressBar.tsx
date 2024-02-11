@@ -1,5 +1,5 @@
 import { Progress } from "@nextui-org/react";
-import type { StatusInfo } from "~/server/api/routers/progress";
+import { type StatusInfo } from "~/server/api/routers/progress";
 
 type Props = {
   status: StatusInfo;

@@ -153,14 +153,7 @@ export const ProgressRouter = createTRPCRouter({
     }),
 
   leaderboard: publicProcedure.query(async ({ ctx }) => {
-    const leaderboard = await ctx.db.$queryRaw<
-      {
-        id: number;
-        name: string | null;
-        image: string | null;
-        points: number;
-      }[]
-    >`
+    const leaderboard = await ctx.db.$queryRaw<LeaderboardEntry[]>`
       select
         u.id,
         u.name,
@@ -182,12 +175,12 @@ export const ProgressRouter = createTRPCRouter({
   }),
 });
 
-export const ssrStatus = async (session: Session) => {
+export const getStatus = async (userId: number) => {
   const completedPoints = await db.task.aggregate({
     where: {
       completedUsers: {
         some: {
-          id: session.user.id,
+          id: userId,
         },
       },
       activated: true,
@@ -210,7 +203,7 @@ export const ssrStatus = async (session: Session) => {
     where: {
       completedUsers: {
         some: {
-          id: session.user.id,
+          id: userId,
         },
       },
       activated: true,
@@ -231,15 +224,8 @@ export const ssrStatus = async (session: Session) => {
   };
 };
 
-export const ssrLeaderboard = async () => {
-  const leaderboard = await db.$queryRaw<
-    {
-      id: number;
-      name: string | null;
-      image: string | null;
-      points: number;
-    }[]
-  >`
+export const getLeaderboard = async () => {
+  const leaderboard = await db.$queryRaw<LeaderboardEntry[]>`
     select
       u.id,
       u.name,
@@ -258,4 +244,18 @@ export const ssrLeaderboard = async () => {
   `;
 
   return leaderboard;
+};
+
+export type StatusInfo = {
+  completedPoints: number | null;
+  totalTasksPoints: number | null;
+  completedTasks: number;
+  totalTasks: number;
+};
+
+export type LeaderboardEntry = {
+  id: number;
+  name: string | null;
+  image: string | null;
+  points: number;
 };
