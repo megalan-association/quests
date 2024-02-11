@@ -41,12 +41,12 @@ export default function StatusProgressBar() {
   }
 
   return (
-    <div className="flex flex-col w-full max-w-sm gap-2 items-center">
+    <div className="flex w-full max-w-sm flex-col items-center gap-2">
       <div className="flex flex-col text-center">
         <p className="text-2xl font-bold">{completedPoints}</p>
         <p className="">Total points!</p>
       </div>
-      <div className="flex w-full flex-col align-middle space-y-2">
+      <div className="flex w-full flex-col space-y-2 align-middle">
         <div className="flex flex-row items-center justify-between align-bottom">
           <p className="font-bold">Progress</p>
           <p className="text-xs text-black/60">
@@ -63,7 +63,9 @@ export default function StatusProgressBar() {
           size="md"
           aria-label="Loading..."
           color="warning"
-          value={((completedPoints - milestoneStart) / milestoneEnd) * 100}
+          isIndeterminate={!status}
+          value={status.completedPoints ?? 0}
+          maxValue={status.totalTasksPoints ?? 10}
         />
         <p className="text-xs text-black/60">
           Completed <span className="font-bold">{status.completedTasks}</span>{" "}
