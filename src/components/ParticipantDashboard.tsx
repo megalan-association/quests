@@ -18,8 +18,10 @@ const ParticipantDashboard: React.FC<PropsType> = (props) => {
     <Layout>
       <main className="flex w-full flex-col items-center px-4">
         <h1 className="pb-6 pt-6 text-3xl font-bold">Hi, {props.userName}</h1>
-        <StatusProgressBar status={props.status} />
-        <div className="flex w-full max-w-96 flex-col space-y-4 px-8 pt-8">
+        <div className="w-full px-4">
+          <StatusProgressBar status={props.status} />
+        </div>
+        <div className="flex w-full max-w-96 flex-col space-y-4 px-4 pt-8">
           <Button
             as={Link}
             href="/map"
@@ -39,28 +41,30 @@ const ParticipantDashboard: React.FC<PropsType> = (props) => {
         </div>
         <div className="flex w-full flex-col items-center pt-8">
           <h3 className="pb-4 text-2xl font-bold">Rooms</h3>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid w-full grid-cols-2 gap-4">
             {props.rooms.map((r) => (
-              <a href={`/rooms/${r.id}`} key={r.id}>
+              <Link href={`/rooms/${r.id}`} key={r.id}>
                 <Card
+                  isPressable
                   radius="lg"
                   isFooterBlurred
-                  className="aspect-square border-none"
+                  className="aspect-square w-full border-none"
                   key={r.id}
+                  shadow="md"
                 >
                   <Image
                     alt={r.name + "-image"}
-                    className="h-full object-cover"
-                    height={200}
+                    className="h-full w-full object-cover"
+                    height={100}
                     src={r.image ?? "/default.png"}
-                    width={200}
+                    width={100}
                     priority
                   />
                   <CardFooter className="absolute bottom-0 z-10 w-full rounded-lg">
-                    <p className="font-bold text-white/80">{r.name}</p>
+                    <p className="text-sm font-bold text-white/80">{r.name}</p>
                   </CardFooter>
                 </Card>
-              </a>
+              </Link>
             ))}
           </div>
         </div>
