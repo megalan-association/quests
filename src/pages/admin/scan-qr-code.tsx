@@ -4,8 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import * as Toast from "@radix-ui/react-toast";
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { api } from "~/utils/api";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
+import { GetServerSideProps } from "next";
+import { getServerAuthSession } from "~/server/auth";
+import { useSession } from "next-auth/react";
+import UnAuthorized from "~/components/unauthorized";
 
 const ScanQRCode = () => {
+  const { data: session } = useSession();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -59,6 +66,9 @@ const ScanQRCode = () => {
     };
   }, []);
 
+  if (session && session.user.type !== "ADMIN")
+    return <UnAuthorized permissionsType="ADMIN" />;
+
   return (
     <Layout>
       <Toast.Provider swipeDirection="right">
@@ -80,14 +90,39 @@ const ScanQRCode = () => {
       <p className="w-full text-center text-foreground/60">
         Give the Scanner a Moment to Start
       </p>
-      <div ref={videoContainerRef} className="">
+      <div ref={videoContainerRef} className="overflow-hidden rounded-lg p-4">
         <video
           ref={videoRef}
-          className="aspect-square overflow-hidden rounded-lg object-cover p-4"
+          className="aspect-square overflow-hidden rounded-lg object-cover"
         />
+      </div>
+      <div className="px-4">
+        <Button as={Link} href="/dashboard" color="primary" className="w-full">
+          Back to Dashboard
+        </Button>
       </div>
     </Layout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  let id = ctx.params?.id;
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
 };
 
 export default ScanQRCode;
