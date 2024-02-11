@@ -20,7 +20,6 @@ export const TaskRouter = createTRPCRouter({
           description: input.description,
           activated: input.activated,
           points: input.points,
-          completedUsers: { connect: { id: ctx.session.user.id } },
           societies: { connect: input.societies },
         },
       });
@@ -34,16 +33,14 @@ export const TaskRouter = createTRPCRouter({
         description: z.string().min(0).default(""),
         activated: z.boolean().default(false),
         points: z.number().default(100),
-        societies: z.array(z.object({ id: z.string().min(1) })).min(1),
       }),
     )
-    .query(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       return ctx.db.task.update({
         where: { id: input.id },
         data: {
           name: input.name,
           description: input.description,
-          activated: input.activated,
           points: input.points,
         },
       });

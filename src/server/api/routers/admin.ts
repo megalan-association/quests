@@ -1,11 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { db } from "~/server/db";
 
 import {
   adminProcedure,
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc";
+import { roomTask } from "./room";
 
 export const AdminRouter = createTRPCRouter({
   joinSociety: protectedProcedure
@@ -73,6 +75,16 @@ export const AdminRouter = createTRPCRouter({
       });
     }),
 
+  getAllSocieties: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.society.findMany({
+      select: {
+        id: true,
+        name: true,
+        image: true,
+      }
+    });
+  }),
+
   getAdminSocietyList: adminProcedure.query(async ({ ctx }) => {
     return ctx.db.user.findFirst({
       where: { id: ctx.session.user.id },
@@ -87,4 +99,71 @@ export const AdminRouter = createTRPCRouter({
       },
     });
   }),
+
+  getAllTask: adminProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.user.findFirstOrThrow({
+      where: { id: ctx.session.user.id },
+      select: {
+        societies: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    return ctx.db.task.findMany({
+      where: {
+        societies: {
+          some: {
+            id: {
+              in: user.societies.map((s) => s.id),
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        activated: true,
+        description: true,
+        name: true,
+        points: true,
+        societies: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+      distinct: ["id"],
+    });
+  }),
 });
+
+export const getAdminSocietyList = async (userId: number) => {
+  return db.user.findFirst({
+    where: { id: userId },
+    select: {
+      societies: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
+  });
+};
+
+export const getAllSocieties = async () => {
+  return db.society.findMany({
+    select: {
+      id: true,
+      name: true,
+      image: true,
+    }
+  });
+}

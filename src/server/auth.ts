@@ -7,6 +7,10 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import OsuProvider from "next-auth/providers/osu";
+import TwitterProvider from "next-auth/providers/twitter";
+import TwitchProvider from "next-auth/providers/twitch";
+import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -56,6 +60,32 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+    }),
+    OsuProvider({
+      clientId: env.OSU_CLIENT_ID,
+      clientSecret: env.OSU_CLIENT_SECRET,
+    }),
+    TwitterProvider({
+      // clientId: env.TWITTER_CLIENT_ID,
+      // clientSecret: env.TWITTER_CLIENT_SECRET,
+      clientId: env.TWITTER_CLIENT_ID_TWO,
+      clientSecret: env.TWITTER_CLIENT_SECRET_TWO,
+      version: "2.0",
+    }),
+    TwitchProvider({
+      clientId: env.TWITCH_CLIENT_ID,
+      clientSecret: env.TWITCH_CLIENT_SECRET,
+    }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
     /**
      * ...add more providers here.
