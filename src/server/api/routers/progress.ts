@@ -153,7 +153,7 @@ export const ProgressRouter = createTRPCRouter({
     }),
 
   leaderboard: publicProcedure.query(async ({ ctx }) => {
-    const leaderboard = await ctx.db.$queryRaw<LeaderboardEntry[]>`
+    const leaderboard = await db.$queryRaw<LeaderboardEntry[]>`
       select
         u.id,
         u.name,
@@ -163,6 +163,8 @@ export const ProgressRouter = createTRPCRouter({
         "User" u
         join "_TaskToUser" ttu on ttu."B" = u.id
         join "Task" t on ttu."A" = t.id
+      where
+        u.type = 'PARTICIPANT'
       group by
         u.id,
         u.name,
@@ -235,6 +237,8 @@ export const getLeaderboard = async () => {
       "User" u
       join "_TaskToUser" ttu on ttu."B" = u.id
       join "Task" t on ttu."A" = t.id
+    where
+      u.type = 'PARTICIPANT'
     group by
       u.id,
       u.name,
