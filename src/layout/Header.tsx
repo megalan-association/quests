@@ -10,7 +10,6 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@nextui-org/react";
-import { PersonIcon } from "@radix-ui/react-icons";
 import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
@@ -80,7 +79,6 @@ const Header: React.FC<Props> = ({ session }) => {
               alt="pfp"
               src={session.user.image ?? undefined}
               showFallback
-              fallback={<PersonIcon className="text-black" />}
               size="md"
               onClick={() => router.push("/settings")}
             />
@@ -102,7 +100,6 @@ const Header: React.FC<Props> = ({ session }) => {
               alt="pfp"
               src={session.user.image ?? undefined}
               showFallback
-              fallback={<PersonIcon className="text-black" />}
               size="md"
               onClick={() => router.push("/settings")}
             />
