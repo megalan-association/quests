@@ -11,7 +11,7 @@ import { DashboardIcon } from "@radix-ui/react-icons";
 const Index = () => {
   const { data: session } = useSession();
   return (
-    <Layout>
+    <Layout padding>
       <main className="flex flex-col items-center px-4">
         <Image
           src="/MegaLAN_Logo_Horizontal_Black.png"

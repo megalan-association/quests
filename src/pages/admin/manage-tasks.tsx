@@ -90,7 +90,7 @@ export default function ManageTasks({
         handleClose={handleClose}
         isOpen={selectedTask && showEdit}
       />
-      <Layout>
+      <Layout padding>
         <main className="flex flex-col items-center">
           <h1 className="w-full pb-10 pt-6 text-center text-3xl font-bold">
             Manage Tasks

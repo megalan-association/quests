@@ -9,7 +9,7 @@ const prizes = ["z790 AORUS ELITE AX Motherboard", "AOURUS Chibi", "AORUS Pens"]
 
 export default function Prizes() {
   return (
-    <Layout>
+    <Layout padding>
       <div className="flex flex-col">
         <h1 className="px-4 text-3xl font-bold">Prizes</h1>
         <div className="p-4">

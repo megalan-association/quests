@@ -5,7 +5,7 @@ import Layout from "~/pages/_layout";
 
 const AdminDashboard: React.FC = () => {
   return (
-    <Layout>
+    <Layout padding>
       <main className="flex w-full flex-col items-center">
         <h1 className="pt-6 text-4xl font-bold">Admin Dashboard</h1>
         <div className="flex w-full max-w-96 flex-col space-y-4 px-8 pt-16">
