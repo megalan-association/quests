@@ -11,7 +11,7 @@ import {
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
 import Layout from "../_layout";
-import { Avatar, Chip, Divider, Progress } from "@nextui-org/react";
+import { Avatar, Chip, Divider, Image, Progress } from "@nextui-org/react";
 import { useState } from "react";
 import React from "react";
 import { CheckCircledIcon, CheckIcon } from "@radix-ui/react-icons";
@@ -122,7 +122,15 @@ const Room = ({ room }: { room: roomData }) => {
         taskId={selectedTask}
         userId={session.data.user.id}
       />
-      <Layout>
+      <Layout padding={false}>
+        <div className="h-36 w-full overflow-hidden object-cover object-center">
+          <Image
+            src={room.info.image ?? undefined}
+            alt="room-image"
+            radius="none"
+            loading="lazy"
+          />
+        </div>
         <h1 className="w-full px-4 pt-6 text-center text-3xl font-bold">
           {room.info.name}
         </h1>

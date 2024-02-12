@@ -14,7 +14,7 @@ type PropsType = {
 
 const ParticipantDashboard: React.FC<PropsType> = (props) => {
   return (
-    <Layout>
+    <Layout padding>
       <main className="flex w-full flex-col items-center px-4">
         <h1 className="pb-6 pt-6 text-3xl font-bold">Hi, {props.userName}</h1>
         <div className="w-full px-4">
@@ -57,6 +57,7 @@ const ParticipantDashboard: React.FC<PropsType> = (props) => {
                     classNames={{ wrapper: "h-full" }}
                     radius="none"
                     src={r.image ?? "/default.png"}
+                    loading="lazy"
                   />
                   <CardFooter className="absolute bottom-0 z-10 w-full rounded-lg bg-black/20">
                     <p className="text-left text-sm font-bold text-white/80">
