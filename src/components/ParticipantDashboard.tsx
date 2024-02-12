@@ -1,6 +1,5 @@
 import { Cog6ToothIcon, MapIcon } from "@heroicons/react/16/solid";
-import { Button, Card, CardFooter } from "@nextui-org/react";
-import Image from "next/image";
+import { Button, Card, CardFooter, Image } from "@nextui-org/react";
 import Link from "next/link";
 import StatusProgressBar from "./statusProgressBar";
 import { RoomInfo } from "~/pages/dashboard";
@@ -15,7 +14,7 @@ type PropsType = {
 
 const ParticipantDashboard: React.FC<PropsType> = (props) => {
   return (
-    <Layout>
+    <Layout padding>
       <main className="flex w-full flex-col items-center px-4">
         <h1 className="pb-6 pt-6 text-3xl font-bold">Hi, {props.userName}</h1>
         <div className="w-full px-4">
@@ -55,13 +54,15 @@ const ParticipantDashboard: React.FC<PropsType> = (props) => {
                   <Image
                     alt={r.name + "-image"}
                     className="h-full w-full object-cover"
-                    height={100}
+                    classNames={{ wrapper: "h-full" }}
+                    radius="none"
                     src={r.image ?? "/default.png"}
-                    width={100}
-                    priority
+                    loading="lazy"
                   />
-                  <CardFooter className="absolute bottom-0 z-10 w-full rounded-lg">
-                    <p className="text-sm font-bold text-white/80">{r.name}</p>
+                  <CardFooter className="absolute bottom-0 z-10 w-full rounded-lg bg-black/20">
+                    <p className="text-left text-sm font-bold text-white/80">
+                      {r.name}
+                    </p>
                   </CardFooter>
                 </Card>
               </Link>

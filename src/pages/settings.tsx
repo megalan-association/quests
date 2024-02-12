@@ -37,7 +37,7 @@ const Settings = ({ joinedSocieties }: { joinedSocieties: Society[] }) => {
   };
 
   return (
-    <Layout>
+    <Layout padding>
       <main className="flex flex-col items-center">
         <h1 className="pt-6 text-3xl font-bold">Settings</h1>
         <div className="flex w-full flex-col items-center space-y-8 pt-14">

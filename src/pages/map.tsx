@@ -14,7 +14,7 @@ const mapNames = ["G Floor", "B Floor"];
 export default function Map() {
   const [mapSwitch, setMapSwitch] = useState(true);
   return (
-    <Layout>
+    <Layout padding>
       <TransformWrapper initialScale={1} centerOnInit>
         {({ resetTransform }) => (
           <React.Fragment>

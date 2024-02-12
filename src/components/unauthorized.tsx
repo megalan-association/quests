@@ -6,7 +6,7 @@ type Props = {
 };
 export default function UnAuthorized({ permissionsType }: Props) {
   return (
-    <Layout>
+    <Layout padding>
       <main className="flex flex-col items-center gap-4 px-4 text-center text-xl">
         <h1 className="pt-6 text-3xl font-bold">Unauthorised</h1>
         <div>

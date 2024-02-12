@@ -59,7 +59,7 @@ export default function Leaderboard({ leaderboard, status }: Props) {
   );
 
   return (
-    <Layout>
+    <Layout padding>
       <main className="flex flex-col justify-start overflow-y-clip px-4">
         <div className="justify-top container flex h-full w-full flex-col items-center gap-4 space-y-2">
           <h1 className="pt-6 text-3xl font-bold">Leaderboard</h1>

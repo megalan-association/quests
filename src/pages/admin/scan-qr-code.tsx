@@ -70,7 +70,7 @@ const ScanQRCode = () => {
     return <UnAuthorized permissionsType="ADMIN" />;
 
   return (
-    <Layout>
+    <Layout padding>
       <Toast.Provider swipeDirection="right">
         <Toast.Root
           open={scanned}
