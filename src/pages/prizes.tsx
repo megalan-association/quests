@@ -1,7 +1,7 @@
 import Layout from "./_layout";
 import Prize0 from "../../public/prizes/aourus_motherboard.png";
-import Prize1 from "../../public/prizes/aourus_chibi.jpg";
-import Prize2 from "../../public/prizes/aorus_pens.jpg";
+import Prize1 from "../../public/prizes/aourus_chibi.webp";
+import Prize2 from "../../public/prizes/aorus_pens.webp";
 
 import { Image } from "@nextui-org/react";
 
