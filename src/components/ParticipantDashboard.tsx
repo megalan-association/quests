@@ -42,7 +42,7 @@ const ParticipantDashboard: React.FC<PropsType> = (props) => {
         <div className="flex w-full flex-col items-center pt-8">
           <h3 className="pb-4 text-2xl font-bold">Rooms</h3>
           <div className="grid w-full grid-cols-2 gap-4">
-            {props.rooms.map((r) => (
+            {props.rooms.map((r, i) => (
               <Link href={`/rooms/${r.id}`} key={r.id}>
                 <Card
                   isPressable
@@ -62,7 +62,7 @@ const ParticipantDashboard: React.FC<PropsType> = (props) => {
                     as={NextImage}
                     width={250}
                     height={250}
-                    priority
+                    priority={i < 4} // load the first few images on the page with priority
                   />
                   <CardFooter className="absolute bottom-0 z-10 w-full rounded-lg bg-black/20">
                     <p className="text-left text-sm font-bold text-white/80">
