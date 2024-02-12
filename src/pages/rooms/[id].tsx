@@ -149,7 +149,7 @@ const Room = ({ room }: { room: roomData }) => {
         </div>
         <div className="space-y-2 p-4">
           <p className="text-medium font-bold">Filter Societies</p>
-          <div className="space-x-2 space-y-2">
+          <div className="flex flex-wrap gap-2">
             {selectedSocieties.map((soc, idx) => (
               <Chip
                 key={idx}
