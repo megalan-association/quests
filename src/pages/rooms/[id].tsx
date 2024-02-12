@@ -11,13 +11,14 @@ import {
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
 import Layout from "../_layout";
-import { Avatar, Chip, Divider, Image, Progress } from "@nextui-org/react";
+import { Avatar, Chip, Image, Progress } from "@nextui-org/react";
 import { useState } from "react";
 import React from "react";
 import { CheckCircledIcon, CheckIcon } from "@radix-ui/react-icons";
 import CompleteTaskModal from "~/components/CompleteTaskModal";
 import * as Toast from "@radix-ui/react-toast";
 import UnAuthorized from "~/components/unauthorized";
+import NextImage from "next/image";
 
 const Room = ({ room }: { room: roomData }) => {
   const router = useRouter();
@@ -129,6 +130,10 @@ const Room = ({ room }: { room: roomData }) => {
             alt="room-image"
             radius="none"
             loading="eager"
+            as={NextImage}
+            width={500}
+            height={250}
+            priority
           />
         </div>
         <h1 className="w-full px-4 pt-6 text-center text-3xl font-bold">

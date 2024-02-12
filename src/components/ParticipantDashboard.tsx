@@ -5,6 +5,7 @@ import StatusProgressBar from "./statusProgressBar";
 import { RoomInfo } from "~/pages/dashboard";
 import Layout from "~/pages/_layout";
 import { StatusInfo } from "~/server/api/routers/progress";
+import NextImage from "next/image";
 
 type PropsType = {
   userName: string;
@@ -58,6 +59,10 @@ const ParticipantDashboard: React.FC<PropsType> = (props) => {
                     radius="none"
                     src={r.image ?? "/default.png"}
                     loading="eager"
+                    as={NextImage}
+                    width={500}
+                    height={250}
+                    priority
                   />
                   <CardFooter className="absolute bottom-0 z-10 w-full rounded-lg bg-black/20">
                     <p className="text-left text-sm font-bold text-white/80">
