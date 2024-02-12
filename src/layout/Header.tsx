@@ -42,7 +42,7 @@ const Header: React.FC<Props> = ({ session }) => {
       <NavbarContent className="pr-3 sm:hidden" justify="center">
         <NavbarBrand>
           <Image
-            src="/megalan_logo.png"
+            src="/megalan_logo.webp"
             width={500}
             height={250}
             alt="logo"
@@ -55,7 +55,7 @@ const Header: React.FC<Props> = ({ session }) => {
       <NavbarContent className="hidden gap-4 sm:flex" justify="center">
         <NavbarBrand>
           <Image
-            src="/megalan_logo.png"
+            src="/megalan_logo.webp"
             width={500}
             height={250}
             alt="logo"

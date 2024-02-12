@@ -1,5 +1,5 @@
 import Layout from "./_layout";
-import Prize0 from "../../public/prizes/aourus_motherboard.png";
+import Prize0 from "../../public/prizes/aourus_motherboard.webp";
 import Prize1 from "../../public/prizes/aourus_chibi.webp";
 import Prize2 from "../../public/prizes/aorus_pens.webp";
 

@@ -14,7 +14,7 @@ const Index = () => {
     <Layout padding>
       <main className="flex flex-col items-center px-4">
         <Image
-          src="/MegaLAN_Logo_Horizontal_Black.png"
+          src="/MegaLAN_Logo_Horizontal_Black.webp"
           alt="MegaLAN: UNSW's Gaming Convention"
           width={640}
           height={72}
