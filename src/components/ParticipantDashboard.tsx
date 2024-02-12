@@ -60,7 +60,7 @@ const ParticipantDashboard: React.FC<PropsType> = (props) => {
                     src={r.image ?? "/default.png"}
                     loading="eager"
                     as={NextImage}
-                    width={500}
+                    width={250}
                     height={250}
                     priority
                   />
