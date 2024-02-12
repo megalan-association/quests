@@ -21,6 +21,7 @@ import {
   StatusInfo,
 } from "~/server/api/routers/progress";
 import Layout from "./_layout";
+import { useSession } from "next-auth/react";
 
 type User = {
   id: number;
@@ -35,6 +36,8 @@ type Props = {
 };
 
 export default function Leaderboard({ leaderboard, status }: Props) {
+  const { data: session } = useSession();
+
   const renderCell = React.useCallback(
     (index: number, user: User, columnKey: React.Key) => {
       switch (columnKey) {
@@ -63,7 +66,9 @@ export default function Leaderboard({ leaderboard, status }: Props) {
       <main className="flex flex-col justify-start overflow-y-clip px-4">
         <div className="justify-top container flex h-full w-full flex-col items-center gap-4 space-y-2">
           <h1 className="pt-6 text-3xl font-bold">Leaderboard</h1>
-          <StatusProgressBar status={status} />
+          {session && session.user.type === "PARTICIPANT" && (
+            <StatusProgressBar status={status} />
+          )}
           <div className="flex h-full w-full overflow-y-scroll">
             <Table
               aria-label="Example table with custom cells"
@@ -132,6 +137,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         ),
       ),
       status,
+      session,
     },
   };
 };
