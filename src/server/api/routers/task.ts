@@ -68,7 +68,18 @@ export const TaskRouter = createTRPCRouter({
     .input(z.object({ userId: z.number().min(0), taskId: z.number().min(0) }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.user.update({
-        where: { id: input.userId },
+        where: {
+          id: input.userId,
+          societies: {
+            some: {
+              users: {
+                some: {
+                  id: ctx.session.user.id,
+                },
+              },
+            },
+          },
+        },
         data: {
           completedTasks: { connect: { id: input.taskId } },
         },
