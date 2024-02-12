@@ -57,7 +57,7 @@ const ParticipantDashboard: React.FC<PropsType> = (props) => {
                     classNames={{ wrapper: "h-full" }}
                     radius="none"
                     src={r.image ?? "/default.png"}
-                    loading="lazy"
+                    loading="eager"
                   />
                   <CardFooter className="absolute bottom-0 z-10 w-full rounded-lg bg-black/20">
                     <p className="text-left text-sm font-bold text-white/80">

@@ -128,7 +128,7 @@ const Room = ({ room }: { room: roomData }) => {
             src={room.info.image ?? undefined}
             alt="room-image"
             radius="none"
-            loading="lazy"
+            loading="eager"
           />
         </div>
         <h1 className="w-full px-4 pt-6 text-center text-3xl font-bold">
