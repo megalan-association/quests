@@ -70,15 +70,7 @@ export const TaskRouter = createTRPCRouter({
       return ctx.db.user.update({
         where: {
           id: input.userId,
-          societies: {
-            some: {
-              users: {
-                some: {
-                  id: ctx.session.user.id,
-                },
-              },
-            },
-          },
+          // check for society
         },
         data: {
           completedTasks: { connect: { id: input.taskId } },
